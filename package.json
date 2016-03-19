@@ -1,0 +1,32 @@
+{
+  "name": "SunShare",
+  "description": "Presentation platform custom built for SunRun.",
+  "repository": "https://github.com/Thann/SunShare",
+  "version": "0.0.1",
+  "scripts": {},
+  "license": "PROPRIETARY",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-core": "^6.7.2",
+    "babel-loader": "^6.2.4",
+    "backbone": "^1.3.2",
+    "backbone-subviews": "^1.0.0",
+    "backbone.localstorage": "^1.1.16",
+    "bootstrap": "^3.3.6",
+    "css-loader": "^0.23.1",
+    "exports-loader": "^0.6.3",
+    "file-loader": "^0.8.5",
+    "font-awesome": "^4.5.0",
+    "imports-loader": "^0.6.5",
+    "jquery": "^2.2.1",
+    "node-getopt": "^0.2.3",
+    "node-sass": "^3.4.2",
+    "rivets": "^0.8.1",
+    "rtcmulticonnection-v3": "^3.2.91",
+    "sass-loader": "^3.2.0",
+    "style-loader": "^0.13.0",
+    "underscore": "^1.8.3",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.12.14"
+  }
+}
