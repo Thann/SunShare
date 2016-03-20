@@ -12,18 +12,31 @@ var AppLayout = Backbone.View.extend({
   el: 'body',
   template: `
     <div id="header"></div>
-    <button class="btn btn-default">{ user.role }</button>
-    <div data-subview="viewer"></div>
+    <button id="toggle" class="btn btn-default">
+      <span rv-show="user.isAdmin">Admin</span>
+      <span rv-hide="user.isAdmin">Client</span>
+    </button>
+    <div rv-hide="state.presentation">
+      <button id="start" rv-show="user.isAdmin">START</button>
+      Waiting for presentation to start..
+    </div>
+    <div rv-show="state.presentation">
+      <div data-subview="viewer"></div>
+    </div>
     <div id="footer"></div>
   `,
   events: {
-    'click button': function(e) {
+    'click button#toggle': function(e) {
       UserService.toggleAdmin();
+    },
+    'click button#start': function(e) {
+      RTCWrapper.selectPresentation('theonlyone');
     }
   },
   initialize: function() {
     Backbone.Subviews.add( this );
     this.scope.user = UserService;
+    this.scope.state = RTCWrapper.state;
     //TODO: move
     RTCWrapper.joinRoom();
   },
