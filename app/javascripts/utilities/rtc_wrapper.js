@@ -1,12 +1,15 @@
 
 require('rtcmulticonnection-v3/dist/rmc3.js');
+
 var UserService = require('utilities/user_service.js');
+var PresLoader = require('utilities/presentation_loader.js');
 
 //TODO: prevent admin-spoofing..
 
 module.exports = {
   state: {},
   joinRoom: function() {
+    var self = this;
     this.connection = new RTCMultiConnection();
     this.connection.session = {data : true};
 
@@ -17,8 +20,12 @@ module.exports = {
     this.connection.onmessage = function(e) {
       console.log("MESSAGE:", e);
       if (e.data.type == 'SyncState') {
+        if (self.state.presentation != e.data.data.presentation){
+          console.log("newPres");
+          PresLoader.load(self.state.presentation)
+        }
         //TODO: this is probably dumb.
-        this.state = e.data.data;
+        self.state = e.data.data;
       }
     }
 
@@ -31,13 +38,15 @@ module.exports = {
   },
   selectPresentation: function(pres) {
     this.state.presentation = pres;
+    PresLoader.load(pres)
     syncState();
   },
 }
 
 // ===== private ======
+var self = module.exports;
 var syncState = function() {
-  this.connection.send({type: 'SyncState', data: this.state});
+  self.connection.send({type: 'SyncState', data: self.state});
 }
 
 document.rtc = module.exports; //TODO: remove

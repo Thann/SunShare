@@ -46,6 +46,7 @@
 
 	/* WEBPACK VAR INJECTION */(function($) {__webpack_require__(2);
 	__webpack_require__(5);
+	__webpack_require__(20);
 	
 	__webpack_require__(6);
 	
@@ -66,9 +67,7 @@
 	      <button id="start" rv-show="user.isAdmin">START</button>
 	      Waiting for presentation to start..
 	    </div>
-	    <div rv-show="state.presentation">
-	      <div data-subview="viewer"></div>
-	    </div>
+	    <div data-subview="viewer"></div>
 	    <div id="footer"></div>
 	  `,
 	  events: {
@@ -17918,10 +17917,11 @@
 	__webpack_require__(14);
 	
 	var rivets = __webpack_require__(10);
+	var PresLoader = __webpack_require__(19);
 	
 	module.exports = Backbone.View.extend({
 	  template: `
-	    <div id="viewer" class="carousel slide">
+	    <div id="viewer" class="carousel slide" rv-if="slides | length | gt 0">
 	      <!-- Indicators -->
 	      <ol class="carousel-indicators">
 	        <li rv-each-item="slides" data-target="#viewer" rv-data-slide-to="index"></li>
@@ -17930,7 +17930,7 @@
 	      <!-- Wrapper for slides -->
 	      <div class="carousel-inner" role="listbox">
 	        <div rv-each-item="slides" class="item">
-	          <img src="..." alt="...">
+	          <img rv-src="item.img" alt="...">
 	          <div class="carousel-caption">{ item.caption }</div>
 	          { item.text }
 	        </div>
@@ -17947,9 +17947,15 @@
 	      </a>
 	    </div>
 	  `,
+	  initialize: function () {
+	    var self = this;
+	    PresLoader.onchange = function () {
+	      self.render();
+	    };
+	  },
 	  render: function () {
+	    this.scope.slides = PresLoader.slides;
 	    this.$el.html(this.template);
-	    this.scope.slides = [{ color: 'red', text: 'jon' }, { color: 'black', text: 'charles' }];
 	    var rvo = rivets.bind(this.$el, this.scope);
 	
 	    // Make the first one active
@@ -17965,12 +17971,6 @@
 	  },
 	  scope: {}
 	});
-	
-	// =======
-	
-	rivets.binders.color = function (el, value) {
-	  el.style['background-color'] = value;
-	};
 
 /***/ },
 /* 14 */
@@ -18018,13 +18018,16 @@
 
 	
 	__webpack_require__(18);
+	
 	var UserService = __webpack_require__(17);
+	var PresLoader = __webpack_require__(19);
 	
 	//TODO: prevent admin-spoofing..
 	
 	module.exports = {
 	  state: {},
 	  joinRoom: function () {
+	    var self = this;
 	    this.connection = new RTCMultiConnection();
 	    this.connection.session = { data: true };
 	
@@ -18035,8 +18038,12 @@
 	    this.connection.onmessage = function (e) {
 	      console.log("MESSAGE:", e);
 	      if (e.data.type == 'SyncState') {
+	        if (self.state.presentation != e.data.data.presentation) {
+	          console.log("newPres");
+	          PresLoader.load(self.state.presentation);
+	        }
 	        //TODO: this is probably dumb.
-	        this.state = e.data.data;
+	        self.state = e.data.data;
 	      }
 	    };
 	
@@ -18049,13 +18056,15 @@
 	  },
 	  selectPresentation: function (pres) {
 	    this.state.presentation = pres;
+	    PresLoader.load(pres);
 	    syncState();
 	  }
 	};
 	
 	// ===== private ======
+	var self = module.exports;
 	var syncState = function () {
-	  this.connection.send({ type: 'SyncState', data: this.state });
+	  self.connection.send({ type: 'SyncState', data: self.state });
 	};
 	
 	document.rtc = module.exports; //TODO: remove
@@ -23548,6 +23557,62 @@
 	    window.RTCMultiConnection = RTCMultiConnection;
 	})();
 
+
+/***/ },
+/* 19 */
+/***/ function(module, exports) {
+
+	
+	var dummyPres = [{ color: 'red', text: 'jon', img: 'https://www.google.com/logos/doodles/2016/first-day-of-spring-2016-northern-hemisphere-5727786629070848.4-hp.gif' }, { color: 'black', text: 'charles', img: 'https://www.google.com/logos/doodles/2016/first-day-of-spring-2016-northern-hemisphere-5727786629070848.4-hp.gif' }];
+	
+	module.exports = {
+	  load: function (pres) {
+	    console.log('Loading Pres:', pres);
+	    this.slides = dummyPres;
+	    console.log('OOO', this.onchange);
+	    if (typeof this.onchange == 'function') this.onchange();
+	  },
+	  // upload: function() {
+	  // },
+	  slides: []
+	};
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	var rivets = __webpack_require__(10);
+	
+	// === Binders ===
+	rivets.binders.color = function (el, value) {
+	  el.style['background-color'] = value;
+	};
+	
+	// === Formatters ===
+	rivets.formatters.length = function (value) {
+	  return value && value.length;
+	};
+	
+	rivets.formatters.gt = function (value, arg) {
+	  return value > arg;
+	};
+	
+	rivets.formatters.gte = function (value, arg) {
+	  return value >= arg;
+	};
+	
+	rivets.formatters.lt = function (value, arg) {
+	  return value < arg;
+	};
+	
+	rivets.formatters.lte = function (value, arg) {
+	  return value >= arg;
+	};
+	
+	rivets.formatters.eq = function (value, arg) {
+	  return value == arg;
+	};
 
 /***/ }
 /******/ ]);

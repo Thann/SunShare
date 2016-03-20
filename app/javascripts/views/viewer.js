@@ -1,10 +1,11 @@
 require('stylesheets/viewer.css');
 
 var rivets = require('rivets');
+var PresLoader = require('utilities/presentation_loader.js');
 
 module.exports = Backbone.View.extend({
   template: `
-    <div id="viewer" class="carousel slide">
+    <div id="viewer" class="carousel slide" rv-if="slides | length | gt 0">
       <!-- Indicators -->
       <ol class="carousel-indicators">
         <li rv-each-item="slides" data-target="#viewer" rv-data-slide-to="index"></li>
@@ -13,7 +14,7 @@ module.exports = Backbone.View.extend({
       <!-- Wrapper for slides -->
       <div class="carousel-inner" role="listbox">
         <div rv-each-item="slides" class="item">
-          <img src="..." alt="...">
+          <img rv-src="item.img" alt="...">
           <div class="carousel-caption">{ item.caption }</div>
           { item.text }
         </div>
@@ -30,12 +31,13 @@ module.exports = Backbone.View.extend({
       </a>
     </div>
   `,
+  initialize: function() {
+    var self = this;
+    PresLoader.onchange = function() { self.render(); };
+  },
   render: function(){
+    this.scope.slides = PresLoader.slides;
     this.$el.html(this.template);
-    this.scope.slides = [
-      {color: 'red', text: 'jon'},
-      {color: 'black', text: 'charles'},
-    ]
     var rvo = rivets.bind(this.$el, this.scope)
 
     // Make the first one active
@@ -51,9 +53,3 @@ module.exports = Backbone.View.extend({
   },
   scope: {}
 });
-
-// =======
-
-rivets.binders.color = function(el, value) {
-  el.style['background-color'] = value
-}

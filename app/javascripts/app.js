@@ -1,5 +1,6 @@
 require('backbone-subviews');
 require('bootstrap/dist/js/bootstrap.js');
+require('utilities/rivets_extensions.js');
 
 require('stylesheets/main.css');
 
@@ -20,9 +21,7 @@ var AppLayout = Backbone.View.extend({
       <button id="start" rv-show="user.isAdmin">START</button>
       Waiting for presentation to start..
     </div>
-    <div rv-show="state.presentation">
-      <div data-subview="viewer"></div>
-    </div>
+    <div data-subview="viewer"></div>
     <div id="footer"></div>
   `,
   events: {
