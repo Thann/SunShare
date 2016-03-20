@@ -2,14 +2,12 @@ require('stylesheets/viewer.css');
 
 var rivets = require('rivets');
 
-//TODO: data-slide-to="index" ??
-
 module.exports = Backbone.View.extend({
   template: `
     <div id="viewer" class="carousel slide">
       <!-- Indicators -->
       <ol class="carousel-indicators">
-        <li rv-each-item="slides" data-target="#viewer" data-slide-to="0"></li>
+        <li rv-each-item="slides" data-target="#viewer" rv-data-slide-to="index"></li>
       </ol>
 
       <!-- Wrapper for slides -->

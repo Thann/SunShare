@@ -16265,14 +16265,12 @@
 	
 	var rivets = __webpack_require__(13);
 	
-	//TODO: data-slide-to="index" ??
-	
 	module.exports = Backbone.View.extend({
 	  template: `
 	    <div id="viewer" class="carousel slide">
 	      <!-- Indicators -->
 	      <ol class="carousel-indicators">
-	        <li rv-each-item="slides" data-target="#viewer" data-slide-to="0"></li>
+	        <li rv-each-item="slides" data-target="#viewer" rv-data-slide-to="index"></li>
 	      </ol>
 	
 	      <!-- Wrapper for slides -->
