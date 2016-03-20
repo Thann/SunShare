@@ -6,7 +6,7 @@ var rivets = require('rivets');
 
 module.exports = Backbone.View.extend({
   template: `
-    <div id="viewer" class="carousel slide" data-ride="carousel">
+    <div id="viewer" class="carousel slide">
       <!-- Indicators -->
       <ol class="carousel-indicators">
         <li rv-each-item="slides" data-target="#viewer" data-slide-to="0"></li>
@@ -42,6 +42,12 @@ module.exports = Backbone.View.extend({
 
     // Make the first one active
     this.$('.item').first().addClass('active');
+    this.$('.carousel-indicators > li').first().addClass('active');
+
+    // Prevent autoslide
+    this.$('#viewer').carousel({
+      interval: false,
+    });
 
     return this;
   },
