@@ -49,17 +49,29 @@
 	
 	__webpack_require__(6);
 	
+	var rivets = __webpack_require__(13);
 	var Viewer = __webpack_require__(10);
+	var RTCWrapper = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"utilities/rtc_wrapper.js\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var UserService = __webpack_require__(18);
 	
 	var AppLayout = Backbone.View.extend({
 	  el: 'body',
 	  template: `
 	    <div id="header"></div>
+	    <button class="btn btn-default">{ user.role }</button>
 	    <div data-subview="viewer"></div>
 	    <div id="footer"></div>
 	  `,
+	  events: {
+	    'click button': function (e) {
+	      UserService.toggleAdmin();
+	    }
+	  },
 	  initialize: function () {
 	    Backbone.Subviews.add(this);
+	    this.scope.user = UserService;
+	    //TODO: move
+	    RTCWrapper.joinRoom();
 	  },
 	  subviewCreators: {
 	    viewer: function () {
@@ -68,8 +80,10 @@
 	  },
 	  render: function () {
 	    this.$el.html(this.template);
+	    var rvo = rivets.bind(this.$el, this.scope);
 	    return this;
-	  }
+	  },
+	  scope: {}
 	});
 	
 	$(document).ready(function () {
@@ -17984,6 +17998,31 @@
 	  }
 	}).call(this);
 
+
+/***/ },
+/* 16 */,
+/* 17 */,
+/* 18 */
+/***/ function(module, exports) {
+
+	
+	// This is just a stub to be replaced by a SalesForce login.
+	
+	module.exports = {
+	  init: function () {
+	    this.role = window.localStorage.getItem('SunShare_role') || 'client';
+	  },
+	  toggleAdmin: function () {
+	    if (this.role == 'client') {
+	      this.role = 'admin';
+	    } else {
+	      this.role = 'client';
+	    }
+	    window.localStorage.setItem('SunShare_role', this.role);
+	  }
+	};
+	
+	module.exports.init();
 
 /***/ }
 /******/ ]);

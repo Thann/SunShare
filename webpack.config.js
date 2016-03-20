@@ -10,6 +10,7 @@ module.exports = {
   resolve: {
     alias: {
       views: __dirname + '/app/javascripts/views',
+      utilities: __dirname + '/app/javascripts/utilities',
       stylesheets: __dirname + '/app/stylesheets',
     }
   },
