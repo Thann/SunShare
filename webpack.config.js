@@ -9,6 +9,7 @@ module.exports = {
   },
   resolve: {
     alias: {
+      views: __dirname + '/app/javascripts/views',
       stylesheets: __dirname + '/app/stylesheets',
     }
   },
