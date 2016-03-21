@@ -1,4 +1,3 @@
-require('backbone-subviews');
 
 require('stylesheets/layout.css');
 

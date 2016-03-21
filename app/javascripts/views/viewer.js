@@ -1,6 +1,7 @@
 require('stylesheets/viewer.css');
 
 var rivets = require('rivets');
+var RTCWrapper = require('utilities/rtc_wrapper.js');
 var PresLoader = require('utilities/presentation_loader.js');
 
 module.exports = Backbone.View.extend({
@@ -31,18 +32,32 @@ module.exports = Backbone.View.extend({
       </a>
     </div>
   `,
+  events: {
+    'click .carousel-control': function(e) {
+      var self = this;
+      var dir = this.$(e.currentTarget).data('slide');
+      setTimeout(function() {
+        var cur = $('.carousel-inner > .item.'+dir).index('.item');
+        RTCWrapper.selectSlide(cur);
+      });
+    }
+    // 'click .carousel-indicators': function(e) {
+    // }
+  },
   initialize: function() {
     var self = this;
     PresLoader.onchange = function() { self.render(); };
   },
-  render: function(){
+  render: function() {
     this.scope.slides = PresLoader.slides;
     this.$el.html(this.template);
     var rvo = rivets.bind(this.$el, this.scope)
 
-    // Make the first one active
-    this.$('.item').first().addClass('active');
-    this.$('.carousel-indicators > li').first().addClass('active');
+    // Make the proper one active
+    var active = RTCWrapper.state.slide || 0;
+    console.log("RENDER ACTIVE:", active)
+    this.$('.item').eq(active).addClass('active');
+    this.$('.carousel-indicators > li').eq(active).addClass('active');
 
     // Prevent autoslide
     this.$('#viewer').carousel({

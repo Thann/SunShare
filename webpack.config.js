@@ -28,6 +28,7 @@ module.exports = {
     loaders: [
       { test:  /\.s?css$/, loaders: ["style", "css", "sass"] },
       { test:  /\.js$/, loader: "babel-loader", exclude: /node_modules/ }, // Adds ES6 support.
+      // { test:  /jquery\.js$/, loader: "expose?$" }, // Makes jQuery ($) globally available.
     ]
   },
   devtool: 'source-map',

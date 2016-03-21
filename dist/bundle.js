@@ -44,11 +44,11 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {__webpack_require__(2);
-	__webpack_require__(5);
+	/* WEBPACK VAR INJECTION */(function($) {__webpack_require__(3);
 	__webpack_require__(6);
+	__webpack_require__(7);
 	
-	var AppLayout = __webpack_require__(10);
+	var AppLayout = __webpack_require__(11);
 	
 	$(document).ready(function () {
 	  new AppLayout().render();
@@ -57,6 +57,13 @@
 
 /***/ },
 /* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["$"] = __webpack_require__(2);
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -9904,7 +9911,7 @@
 
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -9917,7 +9924,7 @@
 		// UMD wrapper
 		if ( true ) {
 			// AMD
-			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(3), __webpack_require__(4), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4), __webpack_require__(5), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 		} else if ( typeof exports !== 'undefined' ) {
 			// Node/CommonJS
 			module.exports = factory( require('underscore' ), require( 'backbone' ), require( 'backbone' ).$ );
@@ -10035,7 +10042,7 @@
 
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;//     Underscore.js 1.8.3
@@ -11589,7 +11596,7 @@
 
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global) {//     Backbone.js 1.3.2
@@ -11608,7 +11615,7 @@
 	
 	  // Set up Backbone appropriately for the environment. Start with AMD.
 	  if (true) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(3), __webpack_require__(1), exports], __WEBPACK_AMD_DEFINE_RESULT__ = function(_, $, exports) {
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(4), __webpack_require__(1), exports], __WEBPACK_AMD_DEFINE_RESULT__ = function(_, $, exports) {
 	      // Export global even in AMD case in case this script is loaded with
 	      // others that may still expect a global Backbone.
 	      root.Backbone = factory(root, exports, _, $);
@@ -13516,7 +13523,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(jQuery) {/*!
@@ -15886,11 +15893,11 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	var rivets = __webpack_require__(7);
+	var rivets = __webpack_require__(8);
 	
 	// === Binders ===
 	rivets.binders.color = function (el, value) {
@@ -15921,9 +15928,17 @@
 	rivets.formatters.eq = function (value, arg) {
 	  return value == arg;
 	};
+	
+	rivets.formatters.and = function (value, arg) {
+	  return value && arg;
+	};
+	
+	rivets.formatters.or = function (value, arg) {
+	  return value || arg;
+	};
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(jQuery, module) {// Rivets.js
@@ -17301,9 +17316,9 @@
 	  };
 	
 	  if (typeof (typeof module !== "undefined" && module !== null ? module.exports : void 0) === 'object') {
-	    module.exports = Rivets.factory(__webpack_require__(9));
+	    module.exports = Rivets.factory(__webpack_require__(10));
 	  } else if (true) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(9)], __WEBPACK_AMD_DEFINE_RESULT__ = function(sightglass) {
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(10)], __WEBPACK_AMD_DEFINE_RESULT__ = function(sightglass) {
 	      return this.rivets = Rivets.factory(sightglass);
 	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  } else {
@@ -17312,10 +17327,10 @@
 	
 	}).call(this);
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(8)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(9)(module)))
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -17331,7 +17346,7 @@
 
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function() {
@@ -17550,15 +17565,14 @@
 
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(2);
 	
-	__webpack_require__(11);
+	__webpack_require__(12);
 	
-	var rivets = __webpack_require__(7);
-	var Viewer = __webpack_require__(15);
+	var rivets = __webpack_require__(8);
+	var Viewer = __webpack_require__(16);
 	var RTCWrapper = __webpack_require__(19);
 	var UserService = __webpack_require__(21);
 	
@@ -17610,16 +17624,16 @@
 	});
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(12);
+	var content = __webpack_require__(13);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(14)(content, {});
+	var update = __webpack_require__(15)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -17636,10 +17650,10 @@
 	}
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(13)();
+	exports = module.exports = __webpack_require__(14)();
 	// imports
 	
 	
@@ -17650,7 +17664,7 @@
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	/*
@@ -17706,7 +17720,7 @@
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -17960,13 +17974,14 @@
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(16);
+	/* WEBPACK VAR INJECTION */(function($) {__webpack_require__(17);
 	
-	var rivets = __webpack_require__(7);
-	var PresLoader = __webpack_require__(18);
+	var rivets = __webpack_require__(8);
+	var RTCWrapper = __webpack_require__(19);
+	var PresLoader = __webpack_require__(22);
 	
 	module.exports = Backbone.View.extend({
 	  template: `
@@ -17996,6 +18011,18 @@
 	      </a>
 	    </div>
 	  `,
+	  events: {
+	    'click .carousel-control': function (e) {
+	      var self = this;
+	      var dir = this.$(e.currentTarget).data('slide');
+	      setTimeout(function () {
+	        var cur = $('.carousel-inner > .item.' + dir).index('.item');
+	        RTCWrapper.selectSlide(cur);
+	      });
+	    }
+	    // 'click .carousel-indicators': function(e) {
+	    // }
+	  },
 	  initialize: function () {
 	    var self = this;
 	    PresLoader.onchange = function () {
@@ -18007,9 +18034,11 @@
 	    this.$el.html(this.template);
 	    var rvo = rivets.bind(this.$el, this.scope);
 	
-	    // Make the first one active
-	    this.$('.item').first().addClass('active');
-	    this.$('.carousel-indicators > li').first().addClass('active');
+	    // Make the proper one active
+	    var active = RTCWrapper.state.slide || 0;
+	    console.log("RENDER ACTIVE:", active);
+	    this.$('.item').eq(active).addClass('active');
+	    this.$('.carousel-indicators > li').eq(active).addClass('active');
 	
 	    // Prevent autoslide
 	    this.$('#viewer').carousel({
@@ -18020,18 +18049,19 @@
 	  },
 	  scope: {}
 	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(17);
+	var content = __webpack_require__(18);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(14)(content, {});
+	var update = __webpack_require__(15)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -18048,10 +18078,10 @@
 	}
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(13)();
+	exports = module.exports = __webpack_require__(14)();
 	// imports
 	
 	
@@ -18062,25 +18092,6 @@
 
 
 /***/ },
-/* 18 */
-/***/ function(module, exports) {
-
-	
-	var dummyPres = [{ color: 'red', text: 'jon', img: 'https://www.google.com/logos/doodles/2016/first-day-of-spring-2016-northern-hemisphere-5727786629070848.4-hp.gif' }, { color: 'black', text: 'charles', img: 'https://www.google.com/logos/doodles/2016/first-day-of-spring-2016-northern-hemisphere-5727786629070848.4-hp.gif' }];
-	
-	module.exports = {
-	  load: function (pres) {
-	    console.log('Loading Pres:', pres);
-	    this.slides = dummyPres;
-	    console.log('OOO', this.onchange);
-	    if (typeof this.onchange == 'function') this.onchange();
-	  },
-	  // upload: function() {
-	  // },
-	  slides: []
-	};
-
-/***/ },
 /* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -18088,7 +18099,7 @@
 	__webpack_require__(20);
 	
 	var UserService = __webpack_require__(21);
-	var PresLoader = __webpack_require__(18);
+	var PresLoader = __webpack_require__(22);
 	
 	//TODO: prevent admin-spoofing..
 	
@@ -18101,17 +18112,23 @@
 	
 	    this.connection.onopen = function (sess) {
 	      console.log("OPEN", sess);
+	      console.log("INIT?", self.connection.isInitiator);
+	      if (self.connection.isInitiator) {
+	        syncState();
+	      }
 	    };
 	
 	    this.connection.onmessage = function (e) {
 	      console.log("MESSAGE:", e);
 	      if (e.data.type == 'SyncState') {
 	        if (self.state.presentation != e.data.data.presentation) {
-	          console.log("newPres");
 	          PresLoader.load(self.state.presentation);
+	          self.state.presentation = e.data.data.presentation;
 	        }
-	        //TODO: this is probably dumb.
-	        self.state = e.data.data;
+	        if (self.state.slide != e.data.data.slide) {
+	          self.state.slide = e.data.data.slide;
+	          PresLoader.onchange(); //TODO: bad
+	        }
 	      }
 	    };
 	
@@ -18124,7 +18141,13 @@
 	  },
 	  selectPresentation: function (pres) {
 	    this.state.presentation = pres;
+	    this.state.slide = 0;
 	    PresLoader.load(pres);
+	    syncState();
+	  },
+	  selectSlide: function (num) {
+	    this.state.slide = num;
+	    // console.log('SSSSS', num)
 	    syncState();
 	  }
 	};
@@ -23625,6 +23648,25 @@
 	};
 	
 	module.exports.init();
+
+/***/ },
+/* 22 */
+/***/ function(module, exports) {
+
+	
+	var dummyPres = [{ color: 'red', text: 'jon', img: 'https://www.google.com/logos/doodles/2016/first-day-of-spring-2016-northern-hemisphere-5727786629070848.4-hp.gif' }, { color: 'black', text: 'charles', img: 'https://www.google.com/logos/doodles/2016/first-day-of-spring-2016-northern-hemisphere-5727786629070848.4-hp.gif' }, { color: 'green', text: 'juan', img: 'https://www.google.com/logos/doodles/2016/first-day-of-spring-2016-northern-hemisphere-5727786629070848.4-hp.gif' }];
+	
+	module.exports = {
+	  load: function (pres) {
+	    console.log('Loading Pres:', pres);
+	    this.slides = dummyPres;
+	    console.log('OOO', this.onchange);
+	    if (typeof this.onchange == 'function') this.onchange();
+	  },
+	  // upload: function() {
+	  // },
+	  slides: []
+	};
 
 /***/ }
 /******/ ]);

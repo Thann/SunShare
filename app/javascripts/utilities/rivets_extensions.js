@@ -30,3 +30,11 @@ rivets.formatters.lte = function(value, arg) {
 rivets.formatters.eq = function(value, arg) {
   return value == arg;
 }
+
+rivets.formatters.and = function(value, arg) {
+  return value && arg;
+}
+
+rivets.formatters.or = function(value, arg) {
+  return value || arg;
+}
