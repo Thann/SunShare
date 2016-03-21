@@ -1,11 +1,14 @@
 var webpack = require('webpack');
 
 module.exports = {
-  context: __dirname + "/app/javascripts",
-  entry: "./app.js",
+  context: __dirname,
+  entry: {
+    bundle: "./app/javascripts/app.js",
+    spec_bundle: "./spec/main.js",
+  },
   output: {
     path: __dirname + "/dist",
-    filename: "bundle.js"
+    filename: "[name].js"
   },
   resolve: {
     alias: {
