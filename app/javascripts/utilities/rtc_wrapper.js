@@ -7,58 +7,50 @@ var PresLoader = require('utilities/presentation_loader.js');
 //TODO: prevent admin-spoofing..
 
 module.exports = {
-  state: {},
-  joinRoom: function() {
+  joinRoom: function(room) {
     var self = this;
     this.connection = new RTCMultiConnection();
     this.connection.session = {data : true};
 
     this.connection.onopen = function(sess) {
       console.log("OPEN", sess);
-      console.log("INIT?", self.connection.isInitiator)
-      if (self.connection.isInitiator) {
-        syncState();
-      }
+      // The Initiator is responsible for sending the state.
+      if (self.connection.isInitiator) { self.syncState(); }
     }
 
     this.connection.onmessage = function(e) {
       console.log("MESSAGE:", e);
       if (e.data.type == 'SyncState') {
-        if (self.state.presentation != e.data.data.presentation){
-          PresLoader.load(self.state.presentation);
-          self.state.presentation = e.data.data.presentation;
-        }
-        if (self.state.slide != e.data.data.slide) {
-          self.state.slide = e.data.data.slide;
-          PresLoader.onchange() //TODO: bad
-        }
+        self.state = e.data.data; //TODO: don't do functions.
+        self.triggerStateChange();
       }
     }
 
-    this.connection.openOrJoin('sunrun_foo_change_me_later');
+    this.connection.openOrJoin(room);
   },
   leaveRoom: function() {
     if (this.connection) {
       this.connection.leave();
     }
   },
-  selectPresentation: function(pres) {
-    this.state.presentation = pres;
-    this.state.slide = 0;
-    PresLoader.load(pres)
-    syncState();
+  state: {},
+  onStateChange: function(fn) { // Register a handler
+    if (typeof fn !== 'function') throw "Must pass a function!";
+    stateChangeHandlers.push(fn);
   },
-  selectSlide: function(num) {
-    this.state.slide = num;
-    // console.log('SSSSS', num)
-    syncState();
+  triggerStateChange: function() { // Trigger handlers
+    var originalState = _.clone(this.state);
+    var self = this;
+    _.forEach(stateChangeHandlers, function(fn) {
+      fn.call(self, oldState, self.state);
+    });
+    oldState = originalState;
+  },
+  syncState: function() {
+    this.connection.send({type: 'SyncState', data: this.state});
   },
 }
 
-// ===== private ======
-var self = module.exports;
-var syncState = function() {
-  self.connection.send({type: 'SyncState', data: self.state});
-}
-
-document.rtc = module.exports; //TODO: remove
+// === private ===
+var oldState = {};
+var stateChangeHandlers = [];

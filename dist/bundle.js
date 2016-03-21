@@ -44,11 +44,11 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {__webpack_require__(3);
+	/* WEBPACK VAR INJECTION */(function($) {__webpack_require__(2);
+	__webpack_require__(5);
 	__webpack_require__(6);
-	__webpack_require__(7);
 	
-	var AppLayout = __webpack_require__(11);
+	var AppLayout = __webpack_require__(10);
 	
 	$(document).ready(function () {
 	  new AppLayout().render();
@@ -57,13 +57,6 @@
 
 /***/ },
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["$"] = __webpack_require__(2);
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -9911,7 +9904,7 @@
 
 
 /***/ },
-/* 3 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -9924,7 +9917,7 @@
 		// UMD wrapper
 		if ( true ) {
 			// AMD
-			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4), __webpack_require__(5), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(3), __webpack_require__(4), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 		} else if ( typeof exports !== 'undefined' ) {
 			// Node/CommonJS
 			module.exports = factory( require('underscore' ), require( 'backbone' ), require( 'backbone' ).$ );
@@ -10042,7 +10035,7 @@
 
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;//     Underscore.js 1.8.3
@@ -11596,7 +11589,7 @@
 
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global) {//     Backbone.js 1.3.2
@@ -11615,7 +11608,7 @@
 	
 	  // Set up Backbone appropriately for the environment. Start with AMD.
 	  if (true) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(4), __webpack_require__(1), exports], __WEBPACK_AMD_DEFINE_RESULT__ = function(_, $, exports) {
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(3), __webpack_require__(1), exports], __WEBPACK_AMD_DEFINE_RESULT__ = function(_, $, exports) {
 	      // Export global even in AMD case in case this script is loaded with
 	      // others that may still expect a global Backbone.
 	      root.Backbone = factory(root, exports, _, $);
@@ -13523,7 +13516,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(jQuery) {/*!
@@ -15893,11 +15886,11 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	var rivets = __webpack_require__(8);
+	var rivets = __webpack_require__(7);
 	
 	// === Binders ===
 	rivets.binders.color = function (el, value) {
@@ -15938,7 +15931,7 @@
 	};
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(jQuery, module) {// Rivets.js
@@ -17316,9 +17309,9 @@
 	  };
 	
 	  if (typeof (typeof module !== "undefined" && module !== null ? module.exports : void 0) === 'object') {
-	    module.exports = Rivets.factory(__webpack_require__(10));
+	    module.exports = Rivets.factory(__webpack_require__(9));
 	  } else if (true) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(10)], __WEBPACK_AMD_DEFINE_RESULT__ = function(sightglass) {
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(9)], __WEBPACK_AMD_DEFINE_RESULT__ = function(sightglass) {
 	      return this.rivets = Rivets.factory(sightglass);
 	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  } else {
@@ -17327,10 +17320,10 @@
 	
 	}).call(this);
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(9)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(8)(module)))
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -17346,7 +17339,7 @@
 
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function() {
@@ -17565,16 +17558,17 @@
 
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	__webpack_require__(12);
+	__webpack_require__(11);
 	
-	var rivets = __webpack_require__(8);
-	var Viewer = __webpack_require__(16);
-	var RTCWrapper = __webpack_require__(19);
-	var UserService = __webpack_require__(21);
+	var rivets = __webpack_require__(7);
+	var Viewer = __webpack_require__(15);
+	var RTCWrapper = __webpack_require__(18);
+	var PresLoader = __webpack_require__(21);
+	var UserService = __webpack_require__(20);
 	
 	module.exports = Backbone.View.extend({
 	  el: 'body',
@@ -17584,8 +17578,8 @@
 	      <span rv-show="user.isAdmin">Admin</span>
 	      <span rv-hide="user.isAdmin">Client</span>
 	    </button>
-	    <button id="stop" rv-show="user.isAdmin | and state.presentation" class="btn btn-default">STOP</button>
-	    <div rv-hide="state.presentation">
+	    <button id="stop" rv-show="user.isAdmin | and rtc.state.presentation" class="btn btn-default">STOP</button>
+	    <div rv-hide="rtc.state.presentation">
 	      <button id="start" rv-show="user.isAdmin">START</button>
 	      Waiting for presentation to start..
 	    </div>
@@ -17597,18 +17591,23 @@
 	      UserService.toggleAdmin();
 	    },
 	    'click button#start': function (e) {
-	      RTCWrapper.selectPresentation('theonlyone');
+	      RTCWrapper.state.presentation = 'dummy';
+	      PresLoader.load(RTCWrapper.state.presentation);
+	      RTCWrapper.syncState();
 	    },
+	    //TODO: Why doesn't this work?
 	    'click button#stop': function (e) {
-	      RTCWrapper.selectPresentation();
+	      RTCWrapper.state.presentation = null;
+	      PresLoader.load(RTCWrapper.state.presentation);
+	      RTCWrapper.syncState();
 	    }
 	  },
 	  initialize: function () {
 	    Backbone.Subviews.add(this);
 	    this.scope.user = UserService;
-	    this.scope.state = RTCWrapper.state;
+	    this.scope.rtc = RTCWrapper;
 	    //TODO: move
-	    RTCWrapper.joinRoom();
+	    RTCWrapper.joinRoom('sunrun_foo_change_me_later');
 	  },
 	  subviewCreators: {
 	    viewer: function () {
@@ -17617,23 +17616,23 @@
 	  },
 	  render: function () {
 	    this.$el.html(this.template);
-	    var rvo = rivets.bind(this.$el, this.scope);
+	    rivets.bind(this.$el, this.scope);
 	    return this;
 	  },
 	  scope: {}
 	});
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(13);
+	var content = __webpack_require__(12);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(15)(content, {});
+	var update = __webpack_require__(14)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -17650,10 +17649,10 @@
 	}
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(14)();
+	exports = module.exports = __webpack_require__(13)();
 	// imports
 	
 	
@@ -17664,7 +17663,7 @@
 
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports) {
 
 	/*
@@ -17720,7 +17719,7 @@
 
 
 /***/ },
-/* 15 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -17974,26 +17973,28 @@
 
 
 /***/ },
-/* 16 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {__webpack_require__(17);
+	/* WEBPACK VAR INJECTION */(function($) {// A glorified wrapper for bootstrap carousel.
 	
-	var rivets = __webpack_require__(8);
-	var RTCWrapper = __webpack_require__(19);
-	var PresLoader = __webpack_require__(22);
+	__webpack_require__(16);
+	
+	var rivets = __webpack_require__(7);
+	var RTCWrapper = __webpack_require__(18);
+	var PresLoader = __webpack_require__(21);
 	
 	module.exports = Backbone.View.extend({
 	  template: `
-	    <div id="viewer" class="carousel slide" rv-if="slides | length | gt 0">
+	    <div id="viewer" class="carousel slide" rv-if="pres.slides | length | gt 0">
 	      <!-- Indicators -->
 	      <ol class="carousel-indicators">
-	        <li rv-each-item="slides" data-target="#viewer" rv-data-slide-to="index"></li>
+	        <li rv-each-item="pres.slides" data-target="#viewer" rv-data-slide-to="index"></li>
 	      </ol>
 	
 	      <!-- Wrapper for slides -->
 	      <div class="carousel-inner" role="listbox">
-	        <div rv-each-item="slides" class="item">
+	        <div rv-each-item="pres.slides" class="item">
 	          <img rv-src="item.img" alt="...">
 	          <div class="carousel-caption">{ item.caption }</div>
 	          { item.text }
@@ -18017,33 +18018,40 @@
 	      var dir = this.$(e.currentTarget).data('slide');
 	      setTimeout(function () {
 	        var cur = $('.carousel-inner > .item.' + dir).index('.item');
-	        RTCWrapper.selectSlide(cur);
+	        RTCWrapper.state.slide = cur;
+	        RTCWrapper.syncState();
 	      });
 	    }
-	    // 'click .carousel-indicators': function(e) {
-	    // }
 	  },
+	  // 'click .carousel-indicators': function(e) {
+	  // },
 	  initialize: function () {
 	    var self = this;
-	    PresLoader.onchange = function () {
+	    PresLoader.onload = function () {
 	      self.render();
 	    };
+	    RTCWrapper.onStateChange(function (prevState, state) {
+	      if (prevState.presentation != state.presentation) {
+	        PresLoader.load(state.presentation);
+	      } else if (prevState.slide != state.slide) {
+	        self.scope.state = state;
+	        self.$('#viewer').carousel(state.slide);
+	      }
+	    });
 	  },
 	  render: function () {
-	    this.scope.slides = PresLoader.slides;
+	    this.scope.pres = PresLoader;
+	    this.scope.state = RTCWrapper.state;
 	    this.$el.html(this.template);
-	    var rvo = rivets.bind(this.$el, this.scope);
+	    rivets.bind(this.$el, this.scope);
 	
 	    // Make the proper one active
-	    var active = RTCWrapper.state.slide || 0;
-	    console.log("RENDER ACTIVE:", active);
+	    var active = this.scope.state.slide || 0;
 	    this.$('.item').eq(active).addClass('active');
 	    this.$('.carousel-indicators > li').eq(active).addClass('active');
 	
 	    // Prevent autoslide
-	    this.$('#viewer').carousel({
-	      interval: false
-	    });
+	    this.$('#viewer').carousel({ interval: false });
 	
 	    return this;
 	  },
@@ -18052,16 +18060,16 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 17 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(18);
+	var content = __webpack_require__(17);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(15)(content, {});
+	var update = __webpack_require__(14)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -18078,10 +18086,10 @@
 	}
 
 /***/ },
-/* 18 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(14)();
+	exports = module.exports = __webpack_require__(13)();
 	// imports
 	
 	
@@ -18092,76 +18100,73 @@
 
 
 /***/ },
-/* 19 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function(_) {
+	__webpack_require__(19);
 	
-	__webpack_require__(20);
-	
-	var UserService = __webpack_require__(21);
-	var PresLoader = __webpack_require__(22);
+	var UserService = __webpack_require__(20);
+	var PresLoader = __webpack_require__(21);
 	
 	//TODO: prevent admin-spoofing..
 	
 	module.exports = {
-	  state: {},
-	  joinRoom: function () {
+	  joinRoom: function (room) {
 	    var self = this;
 	    this.connection = new RTCMultiConnection();
 	    this.connection.session = { data: true };
 	
 	    this.connection.onopen = function (sess) {
 	      console.log("OPEN", sess);
-	      console.log("INIT?", self.connection.isInitiator);
+	      // The Initiator is responsible for sending the state.
 	      if (self.connection.isInitiator) {
-	        syncState();
+	        self.syncState();
 	      }
 	    };
 	
 	    this.connection.onmessage = function (e) {
 	      console.log("MESSAGE:", e);
 	      if (e.data.type == 'SyncState') {
-	        if (self.state.presentation != e.data.data.presentation) {
-	          PresLoader.load(self.state.presentation);
-	          self.state.presentation = e.data.data.presentation;
-	        }
-	        if (self.state.slide != e.data.data.slide) {
-	          self.state.slide = e.data.data.slide;
-	          PresLoader.onchange(); //TODO: bad
-	        }
+	        self.state = e.data.data; //TODO: don't do functions.
+	        self.triggerStateChange();
 	      }
 	    };
 	
-	    this.connection.openOrJoin('sunrun_foo_change_me_later');
+	    this.connection.openOrJoin(room);
 	  },
 	  leaveRoom: function () {
 	    if (this.connection) {
 	      this.connection.leave();
 	    }
 	  },
-	  selectPresentation: function (pres) {
-	    this.state.presentation = pres;
-	    this.state.slide = 0;
-	    PresLoader.load(pres);
-	    syncState();
+	  state: {},
+	  onStateChange: function (fn) {
+	    // Register a handler
+	    if (typeof fn !== 'function') throw "Must pass a function!";
+	    stateChangeHandlers.push(fn);
 	  },
-	  selectSlide: function (num) {
-	    this.state.slide = num;
-	    // console.log('SSSSS', num)
-	    syncState();
+	  triggerStateChange: function () {
+	    // Trigger handlers
+	    var originalState = _.clone(this.state);
+	    var self = this;
+	    _.forEach(stateChangeHandlers, function (fn) {
+	      fn.call(self, oldState, self.state);
+	    });
+	    oldState = originalState;
+	  },
+	  syncState: function () {
+	    this.connection.send({ type: 'SyncState', data: this.state });
 	  }
 	};
 	
-	// ===== private ======
-	var self = module.exports;
-	var syncState = function () {
-	  self.connection.send({ type: 'SyncState', data: self.state });
-	};
-	
-	document.rtc = module.exports; //TODO: remove
+	// === private ===
+	var oldState = {};
+	var stateChangeHandlers = [];
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 20 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Last time updated: 2016-03-16 6:27:32 AM UTC
@@ -23631,7 +23636,7 @@
 
 
 /***/ },
-/* 21 */
+/* 20 */
 /***/ function(module, exports) {
 
 	
@@ -23650,23 +23655,24 @@
 	module.exports.init();
 
 /***/ },
-/* 22 */
+/* 21 */
 /***/ function(module, exports) {
 
 	
-	var dummyPres = [{ color: 'red', text: 'jon', img: 'https://www.google.com/logos/doodles/2016/first-day-of-spring-2016-northern-hemisphere-5727786629070848.4-hp.gif' }, { color: 'black', text: 'charles', img: 'https://www.google.com/logos/doodles/2016/first-day-of-spring-2016-northern-hemisphere-5727786629070848.4-hp.gif' }, { color: 'green', text: 'juan', img: 'https://www.google.com/logos/doodles/2016/first-day-of-spring-2016-northern-hemisphere-5727786629070848.4-hp.gif' }];
+	var presentations = {
+	  dummy: [{ color: 'red', text: 'jon', img: 'https://www.google.com/logos/doodles/2016/first-day-of-spring-2016-northern-hemisphere-5727786629070848.4-hp.gif' }, { color: 'black', text: 'charles', img: 'https://www.google.com/logos/doodles/2016/first-day-of-spring-2016-northern-hemisphere-5727786629070848.4-hp.gif' }, { color: 'green', text: 'juan', img: 'https://www.google.com/logos/doodles/2016/first-day-of-spring-2016-northern-hemisphere-5727786629070848.4-hp.gif' }]
+	};
 	
 	module.exports = {
 	  load: function (pres) {
 	    console.log('Loading Pres:', pres);
-	    this.slides = dummyPres;
-	    console.log('OOO', this.onchange);
-	    if (typeof this.onchange == 'function') this.onchange();
+	    this.slides = presentations[pres];
+	    if (typeof this.onload == 'function') this.onload.apply(this, this.slides);
 	  },
 	  // upload: function() {
 	  // },
-	  slides: []
-	};
+	  slides: [],
+	  onload: null };
 
 /***/ }
 /******/ ]);

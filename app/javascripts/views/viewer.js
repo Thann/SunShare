@@ -1,3 +1,5 @@
+// A glorified wrapper for bootstrap carousel.
+
 require('stylesheets/viewer.css');
 
 var rivets = require('rivets');
@@ -6,15 +8,15 @@ var PresLoader = require('utilities/presentation_loader.js');
 
 module.exports = Backbone.View.extend({
   template: `
-    <div id="viewer" class="carousel slide" rv-if="slides | length | gt 0">
+    <div id="viewer" class="carousel slide" rv-if="pres.slides | length | gt 0">
       <!-- Indicators -->
       <ol class="carousel-indicators">
-        <li rv-each-item="slides" data-target="#viewer" rv-data-slide-to="index"></li>
+        <li rv-each-item="pres.slides" data-target="#viewer" rv-data-slide-to="index"></li>
       </ol>
 
       <!-- Wrapper for slides -->
       <div class="carousel-inner" role="listbox">
-        <div rv-each-item="slides" class="item">
+        <div rv-each-item="pres.slides" class="item">
           <img rv-src="item.img" alt="...">
           <div class="carousel-caption">{ item.caption }</div>
           { item.text }
@@ -38,31 +40,38 @@ module.exports = Backbone.View.extend({
       var dir = this.$(e.currentTarget).data('slide');
       setTimeout(function() {
         var cur = $('.carousel-inner > .item.'+dir).index('.item');
-        RTCWrapper.selectSlide(cur);
+        RTCWrapper.state.slide = cur;
+        RTCWrapper.syncState();
       });
-    }
+    },
     // 'click .carousel-indicators': function(e) {
-    // }
+    // },
   },
   initialize: function() {
     var self = this;
-    PresLoader.onchange = function() { self.render(); };
+    PresLoader.onload = function() { self.render(); };
+    RTCWrapper.onStateChange(function(prevState, state) {
+      if (prevState.presentation != state.presentation) {
+        PresLoader.load(state.presentation);
+      } else if (prevState.slide != state.slide) {
+        self.scope.state = state;
+        self.$('#viewer').carousel(state.slide);
+      }
+    });
   },
   render: function() {
-    this.scope.slides = PresLoader.slides;
+    this.scope.pres = PresLoader;
+    this.scope.state = RTCWrapper.state;
     this.$el.html(this.template);
-    var rvo = rivets.bind(this.$el, this.scope)
+    rivets.bind(this.$el, this.scope);
 
     // Make the proper one active
-    var active = RTCWrapper.state.slide || 0;
-    console.log("RENDER ACTIVE:", active)
+    var active = this.scope.state.slide || 0;
     this.$('.item').eq(active).addClass('active');
     this.$('.carousel-indicators > li').eq(active).addClass('active');
 
     // Prevent autoslide
-    this.$('#viewer').carousel({
-      interval: false,
-    });
+    this.$('#viewer').carousel({ interval: false });
 
     return this;
   },
