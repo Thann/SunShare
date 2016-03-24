@@ -2,6 +2,8 @@
 
 // Serves up index.html, dist/*, and socket.io
 
+var allowedDir = "/dist/"; // Only allow access to files that begin with this..
+
 var options = { // defaults
   http: false,
   ip: "0.0.0.0",
@@ -19,8 +21,6 @@ var opt = require("node-getopt").create([
 // Merge opts into options
 for (var attrname in opt.options) { options[attrname] = opt.options[attrname]; }
 
-var allowedDir = "/dist/"
-
 var server = require(options.http ? 'http' : 'https'),
   url = require('url'),
   path = require('path'),
@@ -30,8 +30,16 @@ function serverHandler(request, response) {
   var uri = url.parse(request.url).pathname,
     filename = path.join(process.cwd(), uri);
 
-  // console.log("uri", uri);
   if (uri == '/') filename = "index.html"
+  else if (uri.indexOf(allowedDir) !== 0) {
+    filename = '';
+    response.writeHead(403, {
+      'Content-Type': 'text/plain'
+    });
+    response.write('403 Forbidden: Only certain paths are allowed. \n');
+    response.end();
+    return;
+  }
 
   var stats;
 

@@ -19,6 +19,7 @@ module.exports = {
   },
   plugins: [
     new webpack.ProvidePlugin({
+      // Variables become available to all modules.
       $: "jquery",
       jQuery: "jquery",
       _: "underscore"
