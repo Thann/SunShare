@@ -22,7 +22,7 @@ module.exports = {
       console.log("MESSAGE:", e);
       if (e.data.type == 'SyncState') {
         self.state = e.data.data; //TODO: don't do functions.
-        self.triggerStateChange();
+        triggerStateChange();
       }
     }
 
@@ -38,19 +38,21 @@ module.exports = {
     if (typeof fn !== 'function') throw "Must pass a function!";
     stateChangeHandlers.push(fn);
   },
-  triggerStateChange: function() { // Trigger handlers
-    var originalState = _.clone(this.state);
-    var self = this;
-    _.forEach(stateChangeHandlers, function(fn) {
-      fn.call(self, oldState, self.state);
-    });
-    oldState = originalState;
-  },
-  syncState: function() {
+  syncState: function(triggerLocally) {
     this.connection.send({type: 'SyncState', data: this.state});
+    if (triggerLocally) triggerStateChange();
   },
 }
 
 // === private ===
 var oldState = {};
 var stateChangeHandlers = [];
+
+var self = module.exports;
+var triggerStateChange = function() { // Trigger handlers
+  var originalState = _.clone(self.state);
+  _.forEach(stateChangeHandlers, function(fn) {
+    fn.call(self, oldState, self.state);
+  });
+  oldState = originalState;
+};

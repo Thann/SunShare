@@ -1,4 +1,62 @@
 
 body {
-  background-color: lightgrey;
+  margin: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  background-color: lightgray;
 }
+
+#header, #footer {
+  position: relative;
+  height: 30px;
+  display: flex;
+  flex-flow: row;
+  z-index: 1; /* Allows UserMenu to go overtop of the main-bar */
+
+  > * {
+    margin-top: 2px;
+    margin-left: 10px;
+    margin-right: 10px;
+
+    &.fa {
+      margin-top: 5px;
+    }
+
+    &.btn {
+      margin-top: 0;
+    }
+  }
+}
+
+#header {
+  border-bottom: 1px solid gray;
+}
+
+#main-row {
+  flex: 1 100%;
+  display: flex;
+  flex-flow: row;
+}
+
+#main-panel {
+  flex: 2 0px;
+}
+
+#left-side-bar,
+#right-side-bar {
+  flex-grow: 0;
+  width: 210px;
+  background-color: gray;
+}
+
+#right-side-bar.hidden,
+#left-side-bar.hidden {
+  width: 0;
+}
+
+#waitingMsg {
+  margin: 25px;
+}
+

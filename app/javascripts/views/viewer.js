@@ -9,18 +9,16 @@ var UserService = require('utilities/user_service.js');
 
 module.exports = Backbone.View.extend({
   template: `
-    <div id="viewer" class="carousel slide" rv-if="pres.slides | length | gt 0">
+    <div id="viewer" class="carousel slide" rv-show="slides | length | gt 0">
       <!-- Indicators -->
       <ol class="carousel-indicators" rv-show="user.isAdmin">
-        <li rv-each-item="pres.slides" data-target="#viewer" rv-data-slide-to="index"></li>
+        <li rv-each-item="slides" rv-data-slide-to="index" data-target="#viewer"></li>
       </ol>
 
       <!-- Wrapper for slides -->
       <div class="carousel-inner" role="listbox">
-        <div rv-each-item="pres.slides" class="item">
-          <img rv-src="item.img" alt="...">
-          <div class="carousel-caption">{ item.caption }</div>
-          { item.text }
+        <div rv-each-url="slides" class="item">
+          <img rv-src="url" alt="...">
         </div>
       </div>
 
@@ -54,10 +52,10 @@ module.exports = Backbone.View.extend({
   },
   initialize: function() {
     var self = this;
-    PresLoader.onload = function() { self.render(); };
     RTCWrapper.onStateChange(function(prevState, state) {
       if (prevState.presentation != state.presentation) {
-        PresLoader.load(state.presentation);
+        self.scope.slides = PresLoader.getSlides(state.presentation);
+        self.render(); //TODO: why is this necessary?
       } else if (prevState.slide != state.slide) {
         self.scope.state = state;
         self.$('#viewer').carousel(state.slide);
@@ -65,7 +63,6 @@ module.exports = Backbone.View.extend({
     });
   },
   render: function() {
-    this.scope.pres = PresLoader;
     this.scope.state = RTCWrapper.state;
     this.scope.user = UserService;
 

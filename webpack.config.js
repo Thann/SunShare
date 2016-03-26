@@ -3,7 +3,7 @@ var webpack = require('webpack');
 module.exports = {
   context: __dirname,
   entry: {
-    bundle: "./app/javascripts/app.js",
+    bundle: "app/javascripts/app.js",
     spec_bundle: "./spec/main.js",
   },
   output: {
@@ -12,9 +12,10 @@ module.exports = {
   },
   resolve: {
     alias: {
-      views: __dirname + '/app/javascripts/views',
-      utilities: __dirname + '/app/javascripts/utilities',
-      stylesheets: __dirname + '/app/stylesheets',
+      app: __dirname + '/app',
+      views: 'app/javascripts/views',
+      utilities: 'app/javascripts/utilities',
+      stylesheets: 'app/stylesheets',
     }
   },
   plugins: [
@@ -28,8 +29,8 @@ module.exports = {
   module: {
     loaders: [
       { test:  /\.s?css$/, loaders: ["style", "css", "sass"] },
-      { test:  /\.js$/, loader: "babel-loader", exclude: /node_modules/ }, // Adds ES6 support.
-      // { test:  /jquery\.js$/, loader: "expose?$" }, // Makes jQuery ($) globally available.
+      { test:  /\.js$/, loader: "babel", exclude: /node_modules/ }, // Adds ES6 support.
+      { test:  /\.json$/, loaders: ["json", "strip-json-comments"] },
     ]
   },
   devtool: 'source-map',

@@ -3,12 +3,12 @@
 
 module.exports = {
   init: function() {
-    this.isAdmin = (window.localStorage.getItem('SunShare_Admin') == 'true');
+    var self = this;
+    $(window).on('hashchange', function() {
+      self.isAdmin = (window.location.hash == '#admin')
+    }).trigger('hashchange');
   },
-  toggleAdmin: function() {
-    this.isAdmin = !this.isAdmin;
-    window.localStorage.setItem('SunShare_Admin', this.isAdmin? 'true' : 'false');
-  }
+  isAdmin: null,
 }
 
 module.exports.init();

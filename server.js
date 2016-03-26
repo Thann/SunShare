@@ -89,6 +89,7 @@ app.on('error', function(err) {
   console.log('ServerError:', err.code)
 })
 
+// === socket.io signaling server ===
 require('rtcmulticonnection-v3/Signaling-Server.js')(app, function(socket) {
   try {
     var params = socket.handshake.query;

@@ -50,9 +50,13 @@
 	
 	var AppLayout = __webpack_require__(10);
 	
+	// Init view when everything has loaded.
 	$(document).ready(function () {
 	  new AppLayout().render();
 	});
+	
+	// Useful for testing; makes '$' available to the browser's inspector.
+	// require('expose?$!jquery');
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
@@ -15889,7 +15893,7 @@
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
+	/* WEBPACK VAR INJECTION */(function(_) {
 	var rivets = __webpack_require__(7);
 	
 	// === Binders ===
@@ -15929,6 +15933,22 @@
 	rivets.formatters.or = function (value, arg) {
 	  return value || arg;
 	};
+	
+	// Concatenate
+	rivets.formatters['+'] = function (value, arg) {
+	  return value + arg;
+	};
+	
+	// Allows rv-each-* to work on objects..
+	// Borrowed from: https://github.com/mikeric/rivets/issues/105
+	rivets.formatters.to_a = function (value) {
+	  var new_value = [];
+	  _.forEach(value, function (v, k) {
+	    new_value.push({ key: k, value: v });
+	  });
+	  return new_value;
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
 /* 7 */
@@ -17565,7 +17585,10 @@
 	__webpack_require__(11);
 	
 	var rivets = __webpack_require__(7);
+	
 	var Viewer = __webpack_require__(15);
+	var Sidebar = __webpack_require__(23);
+	
 	var RTCWrapper = __webpack_require__(18);
 	var PresLoader = __webpack_require__(21);
 	var UserService = __webpack_require__(20);
@@ -17573,33 +17596,31 @@
 	module.exports = Backbone.View.extend({
 	  el: 'body',
 	  template: `
-	    <div id="header"></div>
-	    <button id="toggle" class="btn btn-default">
-	      <span rv-show="user.isAdmin">Admin</span>
-	      <span rv-hide="user.isAdmin">Client</span>
-	    </button>
-	    <button id="stop" rv-show="user.isAdmin | and rtc.state.presentation" class="btn btn-default">STOP</button>
-	    <div rv-hide="rtc.state.presentation">
-	      <button id="start" rv-show="user.isAdmin">START</button>
-	      Waiting for presentation to start..
+	    <div id="header" rv-show="user.isAdmin">
+	      <div id="sidebarToggle" class="fa fa-bars"></div>
+	      <span>SunShare</span>
+	      <span>{ rtc.state.presentation }</span>
+	      <button id="stop" rv-show="rtc.state.presentation" class="btn btn-default fa fa-stop"></button>
 	    </div>
-	    <div data-subview="viewer"></div>
-	    <div id="footer"></div>
+	    <div id="main-row">
+	      <div id="left-side-bar" rv-show="user.isAdmin" rv-class-hidden="rtc.state.presentation">
+	        <div data-subview="sidebar"></div>
+	      </div>
+	      <div id="main-panel">
+	        <div id="waitingMsg" rv-hide="rtc.state.presentation">
+	          Waiting for presentation to start..
+	        </div>
+	        <div data-subview="viewer"></div>
+	      </div>
+	    </div>
 	  `,
 	  events: {
-	    'click button#toggle': function (e) {
-	      UserService.toggleAdmin();
-	    },
-	    'click button#start': function (e) {
-	      RTCWrapper.state.presentation = 'dummy';
-	      PresLoader.load(RTCWrapper.state.presentation);
-	      RTCWrapper.syncState();
-	    },
-	    //TODO: Why doesn't this work?
-	    'click button#stop': function (e) {
+	    'click #stop': function (e) {
 	      RTCWrapper.state.presentation = null;
-	      PresLoader.load(RTCWrapper.state.presentation);
-	      RTCWrapper.syncState();
+	      RTCWrapper.syncState(true);
+	    },
+	    'click #sidebarToggle': function () {
+	      this.$('#left-side-bar').toggleClass('hidden');
 	    }
 	  },
 	  initialize: function () {
@@ -17612,6 +17633,9 @@
 	  subviewCreators: {
 	    viewer: function () {
 	      return new Viewer();
+	    },
+	    sidebar: function () {
+	      return new Sidebar();
 	    }
 	  },
 	  render: function () {
@@ -17657,7 +17681,7 @@
 	
 	
 	// module
-	exports.push([module.id, "body {\n  background-color: lightgrey; }\n", ""]);
+	exports.push([module.id, "body {\n  margin: 0;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  background-color: lightgray; }\n\n#header, #footer {\n  position: relative;\n  height: 30px;\n  display: flex;\n  flex-flow: row;\n  z-index: 1;\n  /* Allows UserMenu to go overtop of the main-bar */ }\n  #header > *, #footer > * {\n    margin-top: 2px;\n    margin-left: 10px;\n    margin-right: 10px; }\n    #header > *.fa, #footer > *.fa {\n      margin-top: 5px; }\n    #header > *.btn, #footer > *.btn {\n      margin-top: 0; }\n\n#header {\n  border-bottom: 1px solid gray; }\n\n#main-row {\n  flex: 1 100%;\n  display: flex;\n  flex-flow: row; }\n\n#main-panel {\n  flex: 2 0px; }\n\n#left-side-bar,\n#right-side-bar {\n  flex-grow: 0;\n  width: 210px;\n  background-color: gray; }\n\n#right-side-bar.hidden,\n#left-side-bar.hidden {\n  width: 0; }\n\n#waitingMsg {\n  margin: 25px; }\n", ""]);
 	
 	// exports
 
@@ -17987,18 +18011,16 @@
 	
 	module.exports = Backbone.View.extend({
 	  template: `
-	    <div id="viewer" class="carousel slide" rv-if="pres.slides | length | gt 0">
+	    <div id="viewer" class="carousel slide" rv-show="slides | length | gt 0">
 	      <!-- Indicators -->
 	      <ol class="carousel-indicators" rv-show="user.isAdmin">
-	        <li rv-each-item="pres.slides" data-target="#viewer" rv-data-slide-to="index"></li>
+	        <li rv-each-item="slides" rv-data-slide-to="index" data-target="#viewer"></li>
 	      </ol>
 	
 	      <!-- Wrapper for slides -->
 	      <div class="carousel-inner" role="listbox">
-	        <div rv-each-item="pres.slides" class="item">
-	          <img rv-src="item.img" alt="...">
-	          <div class="carousel-caption">{ item.caption }</div>
-	          { item.text }
+	        <div rv-each-url="slides" class="item">
+	          <img rv-src="url" alt="...">
 	        </div>
 	      </div>
 	
@@ -18032,20 +18054,17 @@
 	  },
 	  initialize: function () {
 	    var self = this;
-	    PresLoader.onload = function () {
-	      self.render();
-	    };
 	    RTCWrapper.onStateChange(function (prevState, state) {
 	      if (prevState.presentation != state.presentation) {
-	        PresLoader.load(state.presentation);
+	        self.scope.slides = PresLoader.getSlides(state.presentation);
+	        self.render(); //TODO: why is this necessary?
 	      } else if (prevState.slide != state.slide) {
-	        self.scope.state = state;
-	        self.$('#viewer').carousel(state.slide);
-	      }
+	          self.scope.state = state;
+	          self.$('#viewer').carousel(state.slide);
+	        }
 	    });
 	  },
 	  render: function () {
-	    this.scope.pres = PresLoader;
 	    this.scope.state = RTCWrapper.state;
 	    this.scope.user = UserService;
 	
@@ -18136,7 +18155,7 @@
 	      console.log("MESSAGE:", e);
 	      if (e.data.type == 'SyncState') {
 	        self.state = e.data.data; //TODO: don't do functions.
-	        self.triggerStateChange();
+	        triggerStateChange();
 	      }
 	    };
 	
@@ -18153,23 +18172,25 @@
 	    if (typeof fn !== 'function') throw "Must pass a function!";
 	    stateChangeHandlers.push(fn);
 	  },
-	  triggerStateChange: function () {
-	    // Trigger handlers
-	    var originalState = _.clone(this.state);
-	    var self = this;
-	    _.forEach(stateChangeHandlers, function (fn) {
-	      fn.call(self, oldState, self.state);
-	    });
-	    oldState = originalState;
-	  },
-	  syncState: function () {
+	  syncState: function (triggerLocally) {
 	    this.connection.send({ type: 'SyncState', data: this.state });
+	    if (triggerLocally) triggerStateChange();
 	  }
 	};
 	
 	// === private ===
 	var oldState = {};
 	var stateChangeHandlers = [];
+	
+	var self = module.exports;
+	var triggerStateChange = function () {
+	  // Trigger handlers
+	  var originalState = _.clone(self.state);
+	  _.forEach(stateChangeHandlers, function (fn) {
+	    fn.call(self, oldState, self.state);
+	  });
+	  oldState = originalState;
+	};
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
@@ -23644,42 +23665,189 @@
 
 /***/ },
 /* 20 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	
+	/* WEBPACK VAR INJECTION */(function($) {
 	// This is just a stub to be replaced by a SalesForce login.
 	
 	module.exports = {
 	  init: function () {
-	    this.isAdmin = window.localStorage.getItem('SunShare_Admin') == 'true';
+	    var self = this;
+	    $(window).on('hashchange', function () {
+	      self.isAdmin = window.location.hash == '#admin';
+	    }).trigger('hashchange');
 	  },
-	  toggleAdmin: function () {
-	    this.isAdmin = !this.isAdmin;
-	    window.localStorage.setItem('SunShare_Admin', this.isAdmin ? 'true' : 'false');
-	  }
+	  isAdmin: null
 	};
 	
 	module.exports.init();
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
 /* 21 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function($) {// Handles fetching the list of presentations.
 	
-	var presentations = {
-	  dummy: [{ color: 'red', text: 'jon', img: 'https://www.google.com/logos/doodles/2016/first-day-of-spring-2016-northern-hemisphere-5727786629070848.4-hp.gif' }, { color: 'black', text: 'charles', img: 'https://www.google.com/logos/doodles/2016/first-day-of-spring-2016-northern-hemisphere-5727786629070848.4-hp.gif' }, { color: 'green', text: 'juan', img: 'https://www.google.com/logos/doodles/2016/first-day-of-spring-2016-northern-hemisphere-5727786629070848.4-hp.gif' }]
+	var AppConfig = __webpack_require__(22);
+	
+	var new_dummy = {
+	  "folder_name1": {
+	    "pres_name1": ["https://i.imgur.com/ZynM9HQ.jpg", "https://i.imgur.com/UcqFyTh.jpg"],
+	    "pres_name2": ["url3", "url4"]
+	  },
+	  "folder_name2": {
+	    "pres_name3": ["url5", "url6"],
+	    "pres_name4": ["url7", "url8"]
+	  }
 	};
 	
+	var master_list;
+	
 	module.exports = {
-	  load: function (pres) {
-	    console.log('Loading Pres:', pres);
-	    this.slides = presentations[pres];
-	    if (typeof this.onload == 'function') this.onload.apply(this, this.slides);
+	  getList: function (callback) {
+	    $.ajax(window.location.protocol + '//s3.amazonaws.com/' + AppConfig["s3_bucket"]).success(function (data) {
+	      //TODO: build listing.
+	      console.log("AWS:", data.toString());
+	      console.log("XXX:", $(data).find('Contents'));
+	      console.log("JSON:", $.parseXML(data));
+	      var listing = {};
+	      $(data).find('Contents').each(function (i, entry) {
+	        console.log("EE", $(entry).find('Key').text());
+	      });
+	
+	      listing = new_dummy;
+	
+	      master_list = listing;
+	      callback.call(null, listing);
+	    });
 	  },
-	  // upload: function() {
-	  // },
-	  slides: [],
-	  onload: null };
+	  getSlides: function (path) {
+	    if (!path) return null;
+	    path = path.split('/');
+	    return master_list[path[0]][path[1]];
+	  }
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ },
+/* 22 */
+/***/ function(module, exports) {
+
+	module.exports = {
+		"s3_bucket": "thanndemosunshare"
+	};
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($) {
+	__webpack_require__(25);
+	
+	var rivets = __webpack_require__(7);
+	
+	var RTCWrapper = __webpack_require__(18);
+	var PresLoader = __webpack_require__(21);
+	
+	module.exports = Backbone.View.extend({
+	  template: `
+	    <div id="sidebarHeader">
+	      Presentations:
+	      <div class="pull-right">
+	        <span class="fa fa-refresh float-right"></span>
+	      </div>
+	    </div>
+	    <ul id="folders">
+	      <li rv-each-folder="folders | to_a">
+	        <span>{ folder.key }</span>
+	        <ul id="presentations">
+	          <li rv-each-item="folder.value | to_a" rv-data-path="folder.key |+ '/' |+ item.key">
+	            { item.key }
+	            <span>({ item.value | length })</span>
+	          </li>
+	        </ul>
+	      </li>
+	    </ul>
+	    <div id="sidebarLoading" rv-hide="folders">Loading ....</div>
+	  `,
+	  events: {
+	    'click .fa-refresh': function () {
+	      this.getList();
+	      this.scope.folders = null;
+	    },
+	    'click #presentations > li': function (e) {
+	      this.$('.selected').removeClass('selected');
+	      $(e.currentTarget).addClass('selected');
+	
+	      RTCWrapper.state.presentation = $(e.currentTarget).data('path');
+	      RTCWrapper.state.slide = 0;
+	      RTCWrapper.syncState(true);
+	    }
+	  },
+	  initialize: function () {
+	    this.getList();
+	    var self = this;
+	    RTCWrapper.onStateChange(function (o, newState) {
+	      if (!newState.presentation) self.$('.selected').removeClass('selected');
+	    });
+	  },
+	  getList: function () {
+	    var self = this;
+	    PresLoader.getList(function (list) {
+	      self.scope.folders = list;
+	      self.render();
+	    });
+	  },
+	  render: function () {
+	    this.$el.html(this.template);
+	    rivets.bind(this.$el, this.scope);
+	    return this;
+	  },
+	  scope: {}
+	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ },
+/* 24 */,
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(26);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(14)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./sidebar.css", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./sidebar.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(13)();
+	// imports
+	
+	
+	// module
+	exports.push([module.id, "#folders #presentations > li.selected {\n  color: yellow; }\n\n#sidebarLoading {\n  padding-left: 10px; }\n", ""]);
+	
+	// exports
+
 
 /***/ }
 /******/ ]);

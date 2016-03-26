@@ -38,3 +38,18 @@ rivets.formatters.and = function(value, arg) {
 rivets.formatters.or = function(value, arg) {
   return value || arg;
 }
+
+// Concatenate
+rivets.formatters['+'] = function(value, arg) {
+  return value + arg;
+}
+
+// Allows rv-each-* to work on objects..
+// Borrowed from: https://github.com/mikeric/rivets/issues/105
+rivets.formatters.to_a = function(value) {
+  var new_value = [];
+  _.forEach(value, function(v, k) {
+    new_value.push({key: k, value: v})
+  });
+  return new_value;
+}
