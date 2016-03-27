@@ -54,8 +54,10 @@ module.exports = Backbone.View.extend({
     var self = this;
     RTCWrapper.onStateChange(function(prevState, state) {
       if (prevState.presentation != state.presentation) {
-        self.scope.slides = PresLoader.getSlides(state.presentation);
-        self.render(); //TODO: why is this necessary?
+        PresLoader.getSlides(state.presentation, function(slides) {
+          self.scope.slides = slides;
+          self.render(); //TODO: why is a full render necessary? (the carousel doesnt load images otherwise)
+        });
       } else if (prevState.slide != state.slide) {
         self.scope.state = state;
         self.$('#viewer').carousel(state.slide);

@@ -36,9 +36,15 @@ module.exports = {
       callback.call(null, listing);
     });
   },
-  getSlides: function(path) {
-    if (!path) return null;
-    path = path.split('/');
-    return master_list[path[0]][path[1]];
+  getSlides: function(path, callback) {
+    var tid = setInterval(function() {
+      // Block return until getList has resolved once.
+      if (master_list) {
+        clearInterval(tid);
+        if (!path) return callback.call(undefined, [])
+        path = path.split('/');
+        callback.call(undefined, master_list[path[0]][path[1]]);
+      }
+    }, 100);
   }
 }

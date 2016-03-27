@@ -17587,7 +17587,7 @@
 	var rivets = __webpack_require__(7);
 	
 	var Viewer = __webpack_require__(15);
-	var Sidebar = __webpack_require__(23);
+	var Sidebar = __webpack_require__(22);
 	
 	var RTCWrapper = __webpack_require__(18);
 	var PresLoader = __webpack_require__(21);
@@ -18056,8 +18056,10 @@
 	    var self = this;
 	    RTCWrapper.onStateChange(function (prevState, state) {
 	      if (prevState.presentation != state.presentation) {
-	        self.scope.slides = PresLoader.getSlides(state.presentation);
-	        self.render(); //TODO: why is this necessary?
+	        PresLoader.getSlides(state.presentation, function (slides) {
+	          self.scope.slides = slides;
+	          self.render(); //TODO: why is a full render necessary? (the carousel doesnt load images otherwise)
+	        });
 	      } else if (prevState.slide != state.slide) {
 	          self.scope.state = state;
 	          self.$('#viewer').carousel(state.slide);
@@ -23689,7 +23691,7 @@
 
 	/* WEBPACK VAR INJECTION */(function($) {// Handles fetching the list of presentations.
 	
-	var AppConfig = __webpack_require__(22);
+	var AppConfig = __webpack_require__(26);
 	
 	// var listing_format_example = {
 	//   "folder_name1": {
@@ -23725,28 +23727,26 @@
 	      callback.call(null, listing);
 	    });
 	  },
-	  getSlides: function (path) {
-	    if (!path) return null;
-	    path = path.split('/');
-	    return master_list[path[0]][path[1]];
+	  getSlides: function (path, callback) {
+	    var tid = setInterval(function () {
+	      // Block return until getList has resolved once.
+	      if (master_list) {
+	        clearInterval(tid);
+	        if (!path) return callback.call(undefined, []);
+	        path = path.split('/');
+	        callback.call(undefined, master_list[path[0]][path[1]]);
+	      }
+	    }, 100);
 	  }
 	};
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
 /* 22 */
-/***/ function(module, exports) {
-
-	module.exports = {
-		"s3_bucket": "thanndemosunshare"
-	};
-
-/***/ },
-/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {
-	__webpack_require__(25);
+	__webpack_require__(23);
 	
 	var rivets = __webpack_require__(7);
 	
@@ -23812,14 +23812,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 24 */,
-/* 25 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(26);
+	var content = __webpack_require__(24);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(14)(content, {});
@@ -23839,7 +23838,7 @@
 	}
 
 /***/ },
-/* 26 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(13)();
@@ -23851,6 +23850,15 @@
 	
 	// exports
 
+
+/***/ },
+/* 25 */,
+/* 26 */
+/***/ function(module, exports) {
+
+	module.exports = {
+		"s3_bucket": "thanndemosunshare"
+	};
 
 /***/ }
 /******/ ]);
