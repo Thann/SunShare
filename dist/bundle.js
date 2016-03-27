@@ -23780,9 +23780,6 @@
 	      this.scope.folders = null;
 	    },
 	    'click #presentations > li': function (e) {
-	      this.$('.selected').removeClass('selected');
-	      $(e.currentTarget).addClass('selected');
-	
 	      RTCWrapper.state.presentation = $(e.currentTarget).data('path');
 	      RTCWrapper.state.slide = 0;
 	      RTCWrapper.syncState(true);
@@ -23791,8 +23788,12 @@
 	  initialize: function () {
 	    this.getList();
 	    var self = this;
-	    RTCWrapper.onStateChange(function (o, newState) {
-	      if (!newState.presentation) self.$('.selected').removeClass('selected');
+	    RTCWrapper.onStateChange(function (old, newState) {
+	      if (old.presentation !== newState.presentation) {
+	        // Keep selection in sync.
+	        self.$('.selected').removeClass('selected');
+	        if (newState.presentation) self.$('li[data-path="' + newState.presentation + '"]').addClass('selected');
+	      }
 	    });
 	  },
 	  getList: function () {
@@ -23805,6 +23806,8 @@
 	  render: function () {
 	    this.$el.html(this.template);
 	    rivets.bind(this.$el, this.scope);
+	
+	    this.$('li[data-path="' + RTCWrapper.state.presentation + '"]').addClass('selected');
 	    return this;
 	  },
 	  scope: {}
