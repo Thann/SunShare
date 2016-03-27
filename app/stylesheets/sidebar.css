@@ -1,6 +1,15 @@
 
-#sidebarHeader {
+#left-side-bar {
+  padding-right: 5px;
+}
 
+#sidebarHeader {
+  font-size: 17px;
+  margin: 3px 0 1px 5px;
+
+  .fa {
+    margin-right: 6px;
+  }
 }
 
 #folders {
@@ -16,6 +25,10 @@
 
       &.selected {
         color: yellow;
+      }
+
+      &:not(:hover) .fa-trash {
+        display: none;
       }
     }
   }

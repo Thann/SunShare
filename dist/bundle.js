@@ -17587,7 +17587,7 @@
 	var rivets = __webpack_require__(7);
 	
 	var Viewer = __webpack_require__(15);
-	var Sidebar = __webpack_require__(22);
+	var Sidebar = __webpack_require__(23);
 	
 	var RTCWrapper = __webpack_require__(18);
 	var PresLoader = __webpack_require__(21);
@@ -17613,6 +17613,7 @@
 	        <div data-subview="viewer"></div>
 	      </div>
 	    </div>
+	    <!-- <div id="footer"></div> -->
 	  `,
 	  events: {
 	    'click #stop': function (e) {
@@ -17681,7 +17682,7 @@
 	
 	
 	// module
-	exports.push([module.id, "body {\n  margin: 0;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  background-color: lightgray; }\n\n#header, #footer {\n  position: relative;\n  height: 30px;\n  display: flex;\n  flex-flow: row;\n  z-index: 1;\n  /* Allows UserMenu to go overtop of the main-bar */ }\n  #header > *, #footer > * {\n    margin-top: 2px;\n    margin-left: 10px;\n    margin-right: 10px; }\n    #header > *.fa, #footer > *.fa {\n      margin-top: 5px; }\n    #header > *.btn, #footer > *.btn {\n      margin-top: 0; }\n\n#header {\n  border-bottom: 1px solid gray; }\n\n#main-row {\n  flex: 1 100%;\n  display: flex;\n  flex-flow: row; }\n\n#main-panel {\n  flex: 2 0px; }\n\n#left-side-bar,\n#right-side-bar {\n  flex-grow: 0;\n  width: 210px;\n  background-color: gray; }\n\n#right-side-bar.hidden,\n#left-side-bar.hidden {\n  width: 0; }\n\n#waitingMsg {\n  margin: 25px; }\n", ""]);
+	exports.push([module.id, "body {\n  margin: 0;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  background-color: lightgray; }\n\n#header, #footer {\n  position: relative;\n  font-size: 17px;\n  display: flex;\n  flex-flow: row;\n  z-index: 1; }\n  #header > .fa, #footer > .fa {\n    margin: 3px 0px;\n    padding: 8px 10px; }\n  #header > span, #footer > span {\n    margin-top: 7px;\n    margin-right: 15px; }\n\n#header {\n  border-bottom: 1px solid gray; }\n\n#main-row {\n  flex: 1 100%;\n  display: flex;\n  flex-flow: row; }\n\n#main-panel {\n  flex: 2 0px; }\n\n#left-side-bar,\n#right-side-bar {\n  flex-grow: 0;\n  width: 210px;\n  background-color: gray; }\n\n#right-side-bar.hidden,\n#left-side-bar.hidden {\n  width: 0; }\n\n#waitingMsg {\n  margin: 25px; }\n", ""]);
 	
 	// exports
 
@@ -23692,7 +23693,7 @@
 
 	/* WEBPACK VAR INJECTION */(function($) {// Handles fetching the list of presentations.
 	
-	var AppConfig = __webpack_require__(26);
+	var AppConfig = __webpack_require__(22);
 	
 	// var listing_format_example = {
 	//   "folder_name1": {
@@ -23738,18 +23739,36 @@
 	        callback.call(undefined, master_list[path[0]][path[1]]);
 	      }
 	    }, 100);
+	  },
+	  upload: function (folder, name, callback) {
+	    console.log("UPLOAD", path);
+	    //TODO:
+	  },
+	  delete: function (path, callback) {
+	    console.log("DELETE", path);
+	    //TODO:
 	  }
 	};
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
 /* 22 */
+/***/ function(module, exports) {
+
+	module.exports = {
+		"s3_bucket": "thanndemosunshare"
+	};
+
+/***/ },
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {
-	__webpack_require__(23);
+	__webpack_require__(24);
 	
 	var rivets = __webpack_require__(7);
+	
+	var UploadModal = __webpack_require__(26);
 	
 	var RTCWrapper = __webpack_require__(18);
 	var PresLoader = __webpack_require__(21);
@@ -23759,7 +23778,8 @@
 	    <div id="sidebarHeader">
 	      Presentations:
 	      <div class="pull-right">
-	        <span class="fa fa-refresh float-right"></span>
+	        <span class="fa fa-refresh"></span>
+	        <span class="fa fa-upload"></span>
 	      </div>
 	    </div>
 	    <ul id="folders">
@@ -23769,6 +23789,7 @@
 	          <li rv-each-item="folder.value | to_a" rv-data-path="folder.key |+ '/' |+ item.key">
 	            { item.key }
 	            <span>({ item.value | length })</span>
+	            <span class="fa fa-trash pull-right"><span>
 	          </li>
 	        </ul>
 	      </li>
@@ -23776,14 +23797,24 @@
 	    <div id="sidebarLoading" rv-hide="folders">Loading ....</div>
 	  `,
 	  events: {
-	    'click .fa-refresh': function () {
-	      this.getList();
-	      this.scope.folders = null;
-	    },
 	    'click #presentations > li': function (e) {
 	      RTCWrapper.state.presentation = $(e.currentTarget).data('path');
 	      RTCWrapper.state.slide = 0;
 	      RTCWrapper.syncState();
+	    },
+	    'click .fa-refresh': function () {
+	      this.getList();
+	      this.scope.folders = null;
+	    },
+	    'click .fa-upload': function () {
+	      var m = new UploadModal().render();
+	    },
+	    'click .fa-trash': function (e) {
+	      var self = this;
+	      e.stopImmediatePropagation();
+	      PresLoader.delete($(e.currentTarget).parent().data('path'), function () {
+	        self.getList();
+	      });
 	    }
 	  },
 	  initialize: function () {
@@ -23816,13 +23847,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(24);
+	var content = __webpack_require__(25);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(14)(content, {});
@@ -23842,7 +23873,7 @@
 	}
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(13)();
@@ -23850,19 +23881,128 @@
 	
 	
 	// module
-	exports.push([module.id, "#folders #presentations > li.selected {\n  color: yellow; }\n\n#sidebarLoading {\n  padding-left: 10px; }\n", ""]);
+	exports.push([module.id, "#left-side-bar {\n  padding-right: 5px; }\n\n#sidebarHeader {\n  font-size: 17px;\n  margin: 3px 0 1px 5px; }\n  #sidebarHeader .fa {\n    margin-right: 6px; }\n\n#folders #presentations > li.selected {\n  color: yellow; }\n\n#folders #presentations > li:not(:hover) .fa-trash {\n  display: none; }\n\n#sidebarLoading {\n  padding-left: 10px; }\n", ""]);
 	
 	// exports
 
 
 /***/ },
-/* 25 */,
 /* 26 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = {
-		"s3_bucket": "thanndemosunshare"
-	};
+	
+	__webpack_require__(27);
+	
+	var rivets = __webpack_require__(7);
+	
+	var PresLoader = __webpack_require__(21);
+	
+	module.exports = Backbone.View.extend({
+	  className: 'modal fade upload',
+	  template: `
+	    <div class="modal-dialog">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	          <h4 class="modal-title">Upload Presentation</h4>
+	        </div>
+	
+	        <div class="modal-body">
+	          <form class="form-inline">
+	            <div class="form-group">
+	              <!-- <label for="presName"></label> -->
+	              <input id="presName" type="text" placeholder="Presentation Name" name="name" class="form-control">
+	            </div>
+	            <div class="btn-group" data-toggle="buttons">
+	              <label class="btn btn-default active">
+	                <input type="radio" name="options" id="option1" autocomplete="off" checked>
+	                Global
+	              </label>
+	              <label class="btn btn-default">
+	                <input type="radio" name="options" id="option2" autocomplete="off">
+	                User
+	              </label>
+	            </div>
+	            <span class="btn btn-default btn-file">
+	              Select File <input type="file">
+	            </span>
+	          </form>
+	          <div class="alert alert-danger" rv-show="errorMsg">
+	            <strong>Error:</strong> { errorMsg }
+	          </div>
+	        </div>
+	
+	        <div class="modal-footer">
+	          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	          <button type="button" class="btn btn-primary upload">Upload</button>
+	        </div>
+	      </div><!-- /.modal-content -->
+	    </div><!-- /.modal-dialog -->
+	  `,
+	  events: {
+	    'hidden.bs.modal': function (e) {
+	      this.remove();
+	    },
+	    'click button.upload': function () {
+	      this.scope.errorMsg = "Not Yet Implemented =[";
+	      // var self = this;
+	      // PresLoader.upload($(e.currentTarget).data('folder'), function() {
+	      //   self.getList();
+	      // });
+	    }
+	  },
+	  initialize: function () {
+	    this.scope = {};
+	  },
+	  render: function () {
+	    this.$el.html(this.template);
+	    rivets.bind(this.$el, this.scope);
+	
+	    this.$el.modal();
+	    return this;
+	  },
+	  scope: {}
+	});
+
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(28);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(14)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./upload_modal.css", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./upload_modal.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(13)();
+	// imports
+	
+	
+	// module
+	exports.push([module.id, ".modal.upload .modal-body {\n  padding-bottom: 0; }\n\n.modal.upload .btn-file {\n  position: relative;\n  overflow: hidden; }\n\n.modal.upload .btn-file input[type=file] {\n  position: absolute;\n  top: 0;\n  right: 0;\n  min-width: 100%;\n  min-height: 100%;\n  font-size: 100px;\n  text-align: right;\n  filter: alpha(opacity=0);\n  opacity: 0;\n  outline: none;\n  background: white;\n  cursor: inherit;\n  display: block; }\n", ""]);
+	
+	// exports
+
 
 /***/ }
 /******/ ]);

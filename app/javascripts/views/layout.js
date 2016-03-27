@@ -30,6 +30,7 @@ module.exports = Backbone.View.extend({
         <div data-subview="viewer"></div>
       </div>
     </div>
+    <!-- <div id="footer"></div> -->
   `,
   events: {
     'click #stop': function(e) {

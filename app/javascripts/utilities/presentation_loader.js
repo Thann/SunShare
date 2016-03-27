@@ -46,5 +46,13 @@ module.exports = {
         callback.call(undefined, master_list[path[0]][path[1]]);
       }
     }, 100);
+  },
+  upload: function(folder, name, callback) {
+    console.log("UPLOAD", path)
+    //TODO:
+  },
+  delete: function(path, callback) {
+    console.log("DELETE", path)
+    //TODO:
   }
 }

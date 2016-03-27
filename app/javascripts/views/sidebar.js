@@ -3,6 +3,8 @@ require('stylesheets/sidebar.css');
 
 var rivets = require('rivets');
 
+var UploadModal = require('views/upload_modal');
+
 var RTCWrapper = require('utilities/rtc_wrapper.js');
 var PresLoader = require('utilities/presentation_loader.js');
 
@@ -11,7 +13,8 @@ module.exports = Backbone.View.extend({
     <div id="sidebarHeader">
       Presentations:
       <div class="pull-right">
-        <span class="fa fa-refresh float-right"></span>
+        <span class="fa fa-refresh"></span>
+        <span class="fa fa-upload"></span>
       </div>
     </div>
     <ul id="folders">
@@ -21,6 +24,7 @@ module.exports = Backbone.View.extend({
           <li rv-each-item="folder.value | to_a" rv-data-path="folder.key |+ '/' |+ item.key">
             { item.key }
             <span>({ item.value | length })</span>
+            <span class="fa fa-trash pull-right"><span>
           </li>
         </ul>
       </li>
@@ -28,15 +32,25 @@ module.exports = Backbone.View.extend({
     <div id="sidebarLoading" rv-hide="folders">Loading ....</div>
   `,
   events: {
-    'click .fa-refresh': function() {
-      this.getList();
-      this.scope.folders = null;
-    },
     'click #presentations > li': function(e) {
       RTCWrapper.state.presentation = $(e.currentTarget).data('path');
       RTCWrapper.state.slide = 0;
       RTCWrapper.syncState();
     },
+    'click .fa-refresh': function() {
+      this.getList();
+      this.scope.folders = null;
+    },
+    'click .fa-upload': function() {
+      var m = (new UploadModal()).render();
+    },
+    'click .fa-trash': function(e) {
+      var self = this;
+      e.stopImmediatePropagation();
+      PresLoader.delete($(e.currentTarget).parent().data('path'), function() {
+        self.getList();
+      });
+    }
   },
   initialize: function() {
     this.getList();
