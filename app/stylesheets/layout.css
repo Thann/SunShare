@@ -61,3 +61,10 @@ body {
   margin: 25px;
 }
 
+#main-panel.mouse-crosshair #viewer {
+  cursor: crosshair !important;
+
+  > * { /* Ignore clicks while pinging. */
+    pointer-events: none;
+  }
+}

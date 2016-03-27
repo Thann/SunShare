@@ -17607,7 +17607,7 @@
 	      <div id="left-side-bar" rv-show="user.isAdmin" rv-class-hidden="rtc.state.presentation">
 	        <div data-subview="sidebar"></div>
 	      </div>
-	      <div id="main-panel">
+	      <div id="main-panel" rv-class-mouse-crosshair="capturePing">
 	        <div id="waitingMsg" rv-hide="rtc.state.presentation">
 	          Waiting for presentation to start..
 	        </div>
@@ -17628,9 +17628,8 @@
 	      this.scope.capturePing = !this.scope.capturePing;
 	      e.stopPropagation();
 	    },
-	    'click': function (e) {
-	      var target = $(e.target);
-	      var viewer = target.parents('#viewer');
+	    'click #viewer': function (e) {
+	      var viewer = $(e.currentTarget);
 	      if (this.scope.capturePing && viewer.length > 0) {
 	        // Transmit ping
 	        var offset = viewer.offset();
@@ -17639,9 +17638,6 @@
 	          top: (e.pageY - offset.top) / viewer.height()
 	        };
 	        RTCWrapper.syncState();
-	
-	        e.preventDefault();
-	        e.stopPropagation();
 	      }
 	      this.scope.capturePing = false;
 	    }
@@ -17705,7 +17701,7 @@
 	
 	
 	// module
-	exports.push([module.id, "body {\n  margin: 0;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  background-color: lightgray; }\n\n#header, #footer {\n  position: relative;\n  font-size: 17px;\n  display: flex;\n  flex-flow: row;\n  z-index: 1; }\n  #header > .fa, #footer > .fa {\n    margin: 3px 0px;\n    padding: 8px 10px; }\n  #header > span, #footer > span {\n    margin-top: 7px;\n    margin-right: 15px; }\n  #header > button, #footer > button {\n    outline: none;\n    margin-right: 8px !important; }\n\n#header {\n  border-bottom: 1px solid gray; }\n\n#main-row {\n  flex: 1 100%;\n  display: flex;\n  flex-flow: row; }\n\n#main-panel {\n  flex: 2 0px; }\n\n#left-side-bar,\n#right-side-bar {\n  flex-grow: 0;\n  width: 210px;\n  background-color: gray; }\n\n#right-side-bar.hidden,\n#left-side-bar.hidden {\n  width: 0; }\n\n#waitingMsg {\n  margin: 25px; }\n", ""]);
+	exports.push([module.id, "body {\n  margin: 0;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  background-color: lightgray; }\n\n#header, #footer {\n  position: relative;\n  font-size: 17px;\n  display: flex;\n  flex-flow: row;\n  z-index: 1; }\n  #header > .fa, #footer > .fa {\n    margin: 3px 0px;\n    padding: 8px 10px; }\n  #header > span, #footer > span {\n    margin-top: 7px;\n    margin-right: 15px; }\n  #header > button, #footer > button {\n    outline: none;\n    margin-right: 8px !important; }\n\n#header {\n  border-bottom: 1px solid gray; }\n\n#main-row {\n  flex: 1 100%;\n  display: flex;\n  flex-flow: row; }\n\n#main-panel {\n  flex: 2 0px; }\n\n#left-side-bar,\n#right-side-bar {\n  flex-grow: 0;\n  width: 210px;\n  background-color: gray; }\n\n#right-side-bar.hidden,\n#left-side-bar.hidden {\n  width: 0; }\n\n#waitingMsg {\n  margin: 25px; }\n\n#main-panel.mouse-crosshair #viewer {\n  cursor: crosshair !important; }\n  #main-panel.mouse-crosshair #viewer > * {\n    /* Ignore clicks while pinging. */\n    pointer-events: none; }\n", ""]);
 	
 	// exports
 
@@ -18067,18 +18063,15 @@
 	      var dir = this.$(e.currentTarget).data('slide');
 	      setTimeout(function () {
 	        var cur = $('.carousel-inner > .item.' + dir).index('.item');
-	        if (cur >= 0) {
-	          // Dont trigger if nothing actually changed.
-	          RTCWrapper.state.slide = cur;
-	          RTCWrapper.syncState(false);
-	          self.renderPing(false);
-	        }
+	        RTCWrapper.state.slide = cur;
+	        RTCWrapper.syncState();
+	        self.renderPing(false);
 	      });
 	    },
 	    'click .carousel-indicators > li': function (e) {
 	      if (!this.scope.user.isAdmin) return;
 	      RTCWrapper.state.slide = $(e.currentTarget).data('slide-to');
-	      RTCWrapper.syncState(false);
+	      RTCWrapper.syncState();
 	      self.renderPing(false);
 	    }
 	  },

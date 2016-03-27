@@ -24,7 +24,7 @@ module.exports = Backbone.View.extend({
       <div id="left-side-bar" rv-show="user.isAdmin" rv-class-hidden="rtc.state.presentation">
         <div data-subview="sidebar"></div>
       </div>
-      <div id="main-panel">
+      <div id="main-panel" rv-class-mouse-crosshair="capturePing">
         <div id="waitingMsg" rv-hide="rtc.state.presentation">
           Waiting for presentation to start..
         </div>
@@ -45,9 +45,8 @@ module.exports = Backbone.View.extend({
       this.scope.capturePing = !this.scope.capturePing;
       e.stopPropagation();
     },
-    'click': function(e) {
-      var target = $(e.target)
-      var viewer = target.parents('#viewer');
+    'click #viewer': function(e) {
+      var viewer = $(e.currentTarget);
       if (this.scope.capturePing && viewer.length > 0) {
         // Transmit ping
         var offset = viewer.offset();
@@ -56,9 +55,6 @@ module.exports = Backbone.View.extend({
           top: (e.pageY - offset.top) / viewer.height()
         };
         RTCWrapper.syncState();
-
-        e.preventDefault();
-        e.stopPropagation();
       }
       this.scope.capturePing = false;
     },

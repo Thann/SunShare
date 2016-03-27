@@ -41,17 +41,15 @@ module.exports = Backbone.View.extend({
       var dir = this.$(e.currentTarget).data('slide');
       setTimeout(function() {
         var cur = $('.carousel-inner > .item.'+dir).index('.item');
-        if (cur >= 0) { // Dont trigger if nothing actually changed.
-          RTCWrapper.state.slide = cur;
-          RTCWrapper.syncState(false);
-          self.renderPing(false);
-        }
+        RTCWrapper.state.slide = cur;
+        RTCWrapper.syncState();
+        self.renderPing(false);
       });
     },
     'click .carousel-indicators > li': function(e) {
       if (!(this.scope.user.isAdmin)) return;
       RTCWrapper.state.slide = $(e.currentTarget).data('slide-to');
-      RTCWrapper.syncState(false);
+      RTCWrapper.syncState();
       self.renderPing(false);
     },
   },
