@@ -31,6 +31,7 @@ module.exports = Backbone.View.extend({
         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
         <span class="sr-only">Next</span>
       </a>
+      <div id="ping" class="fa fa-circle-thin hidden"></div>
     </div>
   `,
   events: {
@@ -40,14 +41,18 @@ module.exports = Backbone.View.extend({
       var dir = this.$(e.currentTarget).data('slide');
       setTimeout(function() {
         var cur = $('.carousel-inner > .item.'+dir).index('.item');
-        RTCWrapper.state.slide = cur;
-        RTCWrapper.syncState(false);
+        if (cur >= 0) { // Dont trigger if nothing actually changed.
+          RTCWrapper.state.slide = cur;
+          RTCWrapper.syncState(false);
+          self.renderPing(false);
+        }
       });
     },
     'click .carousel-indicators > li': function(e) {
       if (!(this.scope.user.isAdmin)) return;
       RTCWrapper.state.slide = $(e.currentTarget).data('slide-to');
       RTCWrapper.syncState(false);
+      self.renderPing(false);
     },
   },
   initialize: function() {
@@ -61,6 +66,9 @@ module.exports = Backbone.View.extend({
       } else if (prevState.slide != state.slide) {
         self.scope.state = state;
         self.$('#viewer').carousel(state.slide);
+        self.renderPing(false);
+      } else if (prevState.ping != state.ping) {
+        self.renderPing(state.ping);
       }
     });
   },
@@ -80,6 +88,17 @@ module.exports = Backbone.View.extend({
     this.$('#viewer').carousel({ interval: false });
 
     return this;
+  },
+  renderPing: function(ping_state) {
+    if (!ping_state) ping_state = {top: 0, left: -100}; // Render off screen.
+    var viewer = this.$('#viewer');
+    var ping = this.$('#ping').removeClass('hidden');
+    ping.css({
+      top: (ping_state.top * viewer.height()) - (ping.height() / 2),
+      left:(ping_state.left * viewer.width()) - (ping.width()  / 2)
+    });
+    window.getComputedStyle(ping[0]); // Force opacity render.
+    ping.addClass('hidden');
   },
   scope: {}
 });

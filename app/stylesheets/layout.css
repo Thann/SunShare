@@ -24,6 +24,11 @@ body {
     margin-top: 7px;
     margin-right: 15px;
   }
+
+  > button {
+    outline: none;
+    margin-right: 8px !important;
+  }
 }
 
 #header {

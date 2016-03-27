@@ -17,7 +17,8 @@ module.exports = Backbone.View.extend({
       <div id="sidebarToggle" class="fa fa-bars"></div>
       <span>SunShare</span>
       <span>{ rtc.state.presentation }</span>
-      <button id="stop" rv-show="rtc.state.presentation" class="btn btn-default fa fa-stop"></button>
+      <button id="stop" class="btn btn-default fa fa-stop" rv-show="rtc.state.presentation"></button>
+      <button id="ping" class="btn btn-default fa fa-crosshairs" rv-class-active="capturePing" rv-show="rtc.state.presentation"></button>
     </div>
     <div id="main-row">
       <div id="left-side-bar" rv-show="user.isAdmin" rv-class-hidden="rtc.state.presentation">
@@ -33,12 +34,33 @@ module.exports = Backbone.View.extend({
     <!-- <div id="footer"></div> -->
   `,
   events: {
+    'click #sidebarToggle': function() {
+      this.$('#left-side-bar').toggleClass('hidden');
+    },
     'click #stop': function(e) {
       RTCWrapper.state.presentation = null;
       RTCWrapper.syncState();
     },
-    'click #sidebarToggle': function() {
-      this.$('#left-side-bar').toggleClass('hidden');
+    'click #ping': function(e) {
+      this.scope.capturePing = !this.scope.capturePing;
+      e.stopPropagation();
+    },
+    'click': function(e) {
+      var target = $(e.target)
+      var viewer = target.parents('#viewer');
+      if (this.scope.capturePing && viewer.length > 0) {
+        // Transmit ping
+        var offset = viewer.offset();
+        RTCWrapper.state.ping = {
+          left: (e.pageX - offset.left) / viewer.width(),
+          top: (e.pageY - offset.top) / viewer.height()
+        };
+        RTCWrapper.syncState();
+
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      this.scope.capturePing = false;
     },
   },
   initialize: function() {

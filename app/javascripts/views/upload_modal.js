@@ -24,11 +24,11 @@ module.exports = Backbone.View.extend({
             <div class="btn-group" data-toggle="buttons">
               <label class="btn btn-default active">
                 <input type="radio" name="options" id="option1" autocomplete="off" checked>
-                Global
+                User
               </label>
               <label class="btn btn-default">
                 <input type="radio" name="options" id="option2" autocomplete="off">
-                User
+                Global
               </label>
             </div>
             <span class="btn btn-default btn-file">

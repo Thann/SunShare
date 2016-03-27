@@ -17581,7 +17581,7 @@
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
+	/* WEBPACK VAR INJECTION */(function($) {
 	__webpack_require__(11);
 	
 	var rivets = __webpack_require__(7);
@@ -17600,7 +17600,8 @@
 	      <div id="sidebarToggle" class="fa fa-bars"></div>
 	      <span>SunShare</span>
 	      <span>{ rtc.state.presentation }</span>
-	      <button id="stop" rv-show="rtc.state.presentation" class="btn btn-default fa fa-stop"></button>
+	      <button id="stop" class="btn btn-default fa fa-stop" rv-show="rtc.state.presentation"></button>
+	      <button id="ping" class="btn btn-default fa fa-crosshairs" rv-class-active="capturePing" rv-show="rtc.state.presentation"></button>
 	    </div>
 	    <div id="main-row">
 	      <div id="left-side-bar" rv-show="user.isAdmin" rv-class-hidden="rtc.state.presentation">
@@ -17616,12 +17617,33 @@
 	    <!-- <div id="footer"></div> -->
 	  `,
 	  events: {
+	    'click #sidebarToggle': function () {
+	      this.$('#left-side-bar').toggleClass('hidden');
+	    },
 	    'click #stop': function (e) {
 	      RTCWrapper.state.presentation = null;
 	      RTCWrapper.syncState();
 	    },
-	    'click #sidebarToggle': function () {
-	      this.$('#left-side-bar').toggleClass('hidden');
+	    'click #ping': function (e) {
+	      this.scope.capturePing = !this.scope.capturePing;
+	      e.stopPropagation();
+	    },
+	    'click': function (e) {
+	      var target = $(e.target);
+	      var viewer = target.parents('#viewer');
+	      if (this.scope.capturePing && viewer.length > 0) {
+	        // Transmit ping
+	        var offset = viewer.offset();
+	        RTCWrapper.state.ping = {
+	          left: (e.pageX - offset.left) / viewer.width(),
+	          top: (e.pageY - offset.top) / viewer.height()
+	        };
+	        RTCWrapper.syncState();
+	
+	        e.preventDefault();
+	        e.stopPropagation();
+	      }
+	      this.scope.capturePing = false;
 	    }
 	  },
 	  initialize: function () {
@@ -17646,6 +17668,7 @@
 	  },
 	  scope: {}
 	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
 /* 11 */
@@ -17682,7 +17705,7 @@
 	
 	
 	// module
-	exports.push([module.id, "body {\n  margin: 0;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  background-color: lightgray; }\n\n#header, #footer {\n  position: relative;\n  font-size: 17px;\n  display: flex;\n  flex-flow: row;\n  z-index: 1; }\n  #header > .fa, #footer > .fa {\n    margin: 3px 0px;\n    padding: 8px 10px; }\n  #header > span, #footer > span {\n    margin-top: 7px;\n    margin-right: 15px; }\n\n#header {\n  border-bottom: 1px solid gray; }\n\n#main-row {\n  flex: 1 100%;\n  display: flex;\n  flex-flow: row; }\n\n#main-panel {\n  flex: 2 0px; }\n\n#left-side-bar,\n#right-side-bar {\n  flex-grow: 0;\n  width: 210px;\n  background-color: gray; }\n\n#right-side-bar.hidden,\n#left-side-bar.hidden {\n  width: 0; }\n\n#waitingMsg {\n  margin: 25px; }\n", ""]);
+	exports.push([module.id, "body {\n  margin: 0;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  background-color: lightgray; }\n\n#header, #footer {\n  position: relative;\n  font-size: 17px;\n  display: flex;\n  flex-flow: row;\n  z-index: 1; }\n  #header > .fa, #footer > .fa {\n    margin: 3px 0px;\n    padding: 8px 10px; }\n  #header > span, #footer > span {\n    margin-top: 7px;\n    margin-right: 15px; }\n  #header > button, #footer > button {\n    outline: none;\n    margin-right: 8px !important; }\n\n#header {\n  border-bottom: 1px solid gray; }\n\n#main-row {\n  flex: 1 100%;\n  display: flex;\n  flex-flow: row; }\n\n#main-panel {\n  flex: 2 0px; }\n\n#left-side-bar,\n#right-side-bar {\n  flex-grow: 0;\n  width: 210px;\n  background-color: gray; }\n\n#right-side-bar.hidden,\n#left-side-bar.hidden {\n  width: 0; }\n\n#waitingMsg {\n  margin: 25px; }\n", ""]);
 	
 	// exports
 
@@ -18034,6 +18057,7 @@
 	        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
 	        <span class="sr-only">Next</span>
 	      </a>
+	      <div id="ping" class="fa fa-circle-thin hidden"></div>
 	    </div>
 	  `,
 	  events: {
@@ -18043,14 +18067,19 @@
 	      var dir = this.$(e.currentTarget).data('slide');
 	      setTimeout(function () {
 	        var cur = $('.carousel-inner > .item.' + dir).index('.item');
-	        RTCWrapper.state.slide = cur;
-	        RTCWrapper.syncState(false);
+	        if (cur >= 0) {
+	          // Dont trigger if nothing actually changed.
+	          RTCWrapper.state.slide = cur;
+	          RTCWrapper.syncState(false);
+	          self.renderPing(false);
+	        }
 	      });
 	    },
 	    'click .carousel-indicators > li': function (e) {
 	      if (!this.scope.user.isAdmin) return;
 	      RTCWrapper.state.slide = $(e.currentTarget).data('slide-to');
 	      RTCWrapper.syncState(false);
+	      self.renderPing(false);
 	    }
 	  },
 	  initialize: function () {
@@ -18064,6 +18093,9 @@
 	      } else if (prevState.slide != state.slide) {
 	          self.scope.state = state;
 	          self.$('#viewer').carousel(state.slide);
+	          self.renderPing(false);
+	        } else if (prevState.ping != state.ping) {
+	          self.renderPing(state.ping);
 	        }
 	    });
 	  },
@@ -18083,6 +18115,17 @@
 	    this.$('#viewer').carousel({ interval: false });
 	
 	    return this;
+	  },
+	  renderPing: function (ping_state) {
+	    if (!ping_state) ping_state = { top: 0, left: -100 }; // Render off screen.
+	    var viewer = this.$('#viewer');
+	    var ping = this.$('#ping').removeClass('hidden');
+	    ping.css({
+	      top: ping_state.top * viewer.height() - ping.height() / 2,
+	      left: ping_state.left * viewer.width() - ping.width() / 2
+	    });
+	    window.getComputedStyle(ping[0]); // Force opacity render.
+	    ping.addClass('hidden');
 	  },
 	  scope: {}
 	});
@@ -18123,7 +18166,7 @@
 	
 	
 	// module
-	exports.push([module.id, "", ""]);
+	exports.push([module.id, "#viewer #ping {\n  color: red;\n  opacity: 1;\n  position: absolute;\n  width: 45px;\n  height: 45px;\n  line-height: 45px;\n  text-align: center;\n  pointer-events: none; }\n  #viewer #ping.hidden {\n    opacity: 0;\n    display: block !important;\n    transition: opacity 5s cubic-bezier(0.6, 0.04, 0.98, 0.335);\n    /* easeOutCirc */\n    animation-name: ping;\n    animation-duration: 1s;\n    animation-direction: alternate;\n    animation-iteration-count: infinite; }\n\n@keyframes ping {\n  from {\n    font-size: 1; }\n  to {\n    font-size: 45px; } }\n", ""]);
 	
 	// exports
 
@@ -23916,11 +23959,11 @@
 	            <div class="btn-group" data-toggle="buttons">
 	              <label class="btn btn-default active">
 	                <input type="radio" name="options" id="option1" autocomplete="off" checked>
-	                Global
+	                User
 	              </label>
 	              <label class="btn btn-default">
 	                <input type="radio" name="options" id="option2" autocomplete="off">
-	                User
+	                Global
 	              </label>
 	            </div>
 	            <span class="btn btn-default btn-file">
