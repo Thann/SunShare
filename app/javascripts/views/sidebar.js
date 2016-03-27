@@ -35,7 +35,7 @@ module.exports = Backbone.View.extend({
     'click #presentations > li': function(e) {
       RTCWrapper.state.presentation = $(e.currentTarget).data('path');
       RTCWrapper.state.slide = 0;
-      RTCWrapper.syncState(true);
+      RTCWrapper.syncState();
     },
   },
   initialize: function() {

@@ -17617,7 +17617,7 @@
 	  events: {
 	    'click #stop': function (e) {
 	      RTCWrapper.state.presentation = null;
-	      RTCWrapper.syncState(true);
+	      RTCWrapper.syncState();
 	    },
 	    'click #sidebarToggle': function () {
 	      this.$('#left-side-bar').toggleClass('hidden');
@@ -18043,13 +18043,13 @@
 	      setTimeout(function () {
 	        var cur = $('.carousel-inner > .item.' + dir).index('.item');
 	        RTCWrapper.state.slide = cur;
-	        RTCWrapper.syncState();
+	        RTCWrapper.syncState(false);
 	      });
 	    },
 	    'click .carousel-indicators > li': function (e) {
 	      if (!this.scope.user.isAdmin) return;
 	      RTCWrapper.state.slide = $(e.currentTarget).data('slide-to');
-	      RTCWrapper.syncState();
+	      RTCWrapper.syncState(false);
 	    }
 	  },
 	  initialize: function () {
@@ -18149,7 +18149,7 @@
 	      console.log("OPEN", sess);
 	      // The Initiator is responsible for sending the state.
 	      if (self.connection.isInitiator) {
-	        self.syncState();
+	        self.syncState(false);
 	      }
 	    };
 	
@@ -18175,8 +18175,9 @@
 	    stateChangeHandlers.push(fn);
 	  },
 	  syncState: function (triggerLocally) {
+	    // defaults to true
 	    this.connection.send({ type: 'SyncState', data: this.state });
-	    if (triggerLocally) triggerStateChange();
+	    if (triggerLocally !== false) triggerStateChange();
 	  }
 	};
 	
@@ -23782,7 +23783,7 @@
 	    'click #presentations > li': function (e) {
 	      RTCWrapper.state.presentation = $(e.currentTarget).data('path');
 	      RTCWrapper.state.slide = 0;
-	      RTCWrapper.syncState(true);
+	      RTCWrapper.syncState();
 	    }
 	  },
 	  initialize: function () {

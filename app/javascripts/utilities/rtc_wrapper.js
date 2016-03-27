@@ -15,7 +15,7 @@ module.exports = {
     this.connection.onopen = function(sess) {
       console.log("OPEN", sess);
       // The Initiator is responsible for sending the state.
-      if (self.connection.isInitiator) { self.syncState(); }
+      if (self.connection.isInitiator) { self.syncState(false); }
     }
 
     this.connection.onmessage = function(e) {
@@ -38,9 +38,9 @@ module.exports = {
     if (typeof fn !== 'function') throw "Must pass a function!";
     stateChangeHandlers.push(fn);
   },
-  syncState: function(triggerLocally) {
+  syncState: function(triggerLocally) { // defaults to true
     this.connection.send({type: 'SyncState', data: this.state});
-    if (triggerLocally) triggerStateChange();
+    if (triggerLocally !== false) triggerStateChange();
   },
 }
 

@@ -41,13 +41,13 @@ module.exports = Backbone.View.extend({
       setTimeout(function() {
         var cur = $('.carousel-inner > .item.'+dir).index('.item');
         RTCWrapper.state.slide = cur;
-        RTCWrapper.syncState();
+        RTCWrapper.syncState(false);
       });
     },
     'click .carousel-indicators > li': function(e) {
       if (!(this.scope.user.isAdmin)) return;
       RTCWrapper.state.slide = $(e.currentTarget).data('slide-to');
-      RTCWrapper.syncState();
+      RTCWrapper.syncState(false);
     },
   },
   initialize: function() {

@@ -34,7 +34,7 @@ module.exports = Backbone.View.extend({
   events: {
     'click #stop': function(e) {
       RTCWrapper.state.presentation = null;
-      RTCWrapper.syncState(true);
+      RTCWrapper.syncState();
     },
     'click #sidebarToggle': function() {
       this.$('#left-side-bar').toggleClass('hidden');
