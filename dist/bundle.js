@@ -18159,7 +18159,7 @@
 	
 	
 	// module
-	exports.push([module.id, "#viewer #ping {\n  color: red;\n  opacity: 1;\n  position: absolute;\n  width: 45px;\n  height: 45px;\n  line-height: 45px;\n  text-align: center;\n  pointer-events: none; }\n  #viewer #ping.hidden {\n    opacity: 0;\n    display: block !important;\n    transition: opacity 5s cubic-bezier(0.6, 0.04, 0.98, 0.335);\n    /* easeOutCirc */\n    animation-name: ping;\n    animation-duration: 1s;\n    animation-direction: alternate;\n    animation-iteration-count: infinite; }\n\n@keyframes ping {\n  from {\n    font-size: 1; }\n  to {\n    font-size: 45px; } }\n", ""]);
+	exports.push([module.id, "#viewer #ping {\n  top: 0;\n  color: red;\n  opacity: 1;\n  position: absolute;\n  width: 45px;\n  height: 45px;\n  line-height: 45px;\n  text-align: center;\n  pointer-events: none; }\n  #viewer #ping.hidden {\n    opacity: 0;\n    display: block !important;\n    transition: opacity 5s cubic-bezier(0.6, 0.04, 0.98, 0.335);\n    /* easeOutCirc */\n    animation-name: ping;\n    animation-duration: 1s;\n    animation-direction: alternate;\n    animation-iteration-count: infinite; }\n\n@keyframes ping {\n  from {\n    font-size: 1; }\n  to {\n    font-size: 45px; } }\n", ""]);
 	
 	// exports
 
@@ -23926,7 +23926,7 @@
 /* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
+	/* WEBPACK VAR INJECTION */(function($) {
 	__webpack_require__(27);
 	
 	var rivets = __webpack_require__(7);
@@ -23946,22 +23946,22 @@
 	        <div class="modal-body">
 	          <form class="form-inline">
 	            <div class="form-group">
-	              <!-- <label for="presName"></label> -->
-	              <input id="presName" type="text" placeholder="Presentation Name" name="name" class="form-control">
+	              <input type="text" placeholder="Presentation Name" name="name" autocomplete="off" class="form-control">
 	            </div>
 	            <div class="btn-group" data-toggle="buttons">
 	              <label class="btn btn-default active">
-	                <input type="radio" name="options" id="option1" autocomplete="off" checked>
+	                <input type="radio" name="folder" value="user" autocomplete="off" checked>
 	                User
 	              </label>
 	              <label class="btn btn-default">
-	                <input type="radio" name="options" id="option2" autocomplete="off">
+	                <input type="radio" name="folder" value="global" autocomplete="off">
 	                Global
 	              </label>
 	            </div>
-	            <span class="btn btn-default btn-file">
-	              Select File <input type="file">
-	            </span>
+	            <label class="btn btn-default" for="fileSelector">
+	              <input id="fileSelector" type="file" name="file" style="display:none;">
+	              <span>Select File</span>
+	            </label>
 	          </form>
 	          <div class="alert alert-danger" rv-show="errorMsg">
 	            <strong>Error:</strong> { errorMsg }
@@ -23979,12 +23979,32 @@
 	    'hidden.bs.modal': function (e) {
 	      this.remove();
 	    },
+	    'change  #fileSelector': function (e) {
+	      // Update button text when a file is selected.
+	      $(e.target).next('span').html(e.target.files[0].name);
+	    },
 	    'click button.upload': function () {
-	      this.scope.errorMsg = "Not Yet Implemented =[";
-	      // var self = this;
-	      // PresLoader.upload($(e.currentTarget).data('folder'), function() {
-	      //   self.getList();
-	      // });
+	      this.scope.errorMsg = undefined;
+	
+	      // Validate Name.
+	      if (this.$('form [name="name"]').val().length < 1) {
+	        return this.scope.errorMsg = "Must enter a name!";
+	      }
+	
+	      // Validate File.
+	      if (this.$('form [name="file"]')[0].files.length < 1) {
+	        return this.scope.errorMsg = "Must select a file!";
+	      }
+	
+	      // Submit!
+	      $.ajax({
+	        type: 'POST',
+	        url: "/s3_upload",
+	        data: new FormData(this.$('form')[0]),
+	        cache: false,
+	        contentType: false,
+	        processData: false
+	      });
 	    }
 	  },
 	  initialize: function () {
@@ -23999,6 +24019,7 @@
 	  },
 	  scope: {}
 	});
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ },
 /* 27 */
@@ -24035,7 +24056,7 @@
 	
 	
 	// module
-	exports.push([module.id, ".modal.upload .modal-body {\n  padding-bottom: 0; }\n\n.modal.upload .btn-file {\n  position: relative;\n  overflow: hidden; }\n\n.modal.upload .btn-file input[type=file] {\n  position: absolute;\n  top: 0;\n  right: 0;\n  min-width: 100%;\n  min-height: 100%;\n  font-size: 100px;\n  text-align: right;\n  filter: alpha(opacity=0);\n  opacity: 0;\n  outline: none;\n  background: white;\n  cursor: inherit;\n  display: block; }\n", ""]);
+	exports.push([module.id, ".modal.upload .modal-body {\n  padding-bottom: 0; }\n", ""]);
 	
 	// exports
 

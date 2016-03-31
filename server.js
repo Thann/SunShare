@@ -21,16 +21,21 @@ var opt = require("node-getopt").create([
 // Merge opts into options
 for (var attrname in opt.options) { options[attrname] = opt.options[attrname]; }
 
+// Init vars
 var server = require(options.http ? 'http' : 'https'),
   url = require('url'),
   path = require('path'),
   fs = require('fs');
 
+var s3_upload_handler = require('./lib/s3_upload_handler.js');
+
 function serverHandler(request, response) {
   var uri = url.parse(request.url).pathname,
     filename = path.join(process.cwd(), uri);
 
+  // Parse and handle the route.
   if (uri == '/') filename = "index.html"
+  else if (uri == '/s3_upload') return s3_upload_handler(request, response);
   else if (uri.indexOf(allowedDir) !== 0) {
     filename = '';
     response.writeHead(403, {

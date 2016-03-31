@@ -4,6 +4,7 @@ $ping-size: 45px;
 #viewer {
 
   #ping {
+    top: 0;
     color: red;
     opacity: 1;
     position: absolute;

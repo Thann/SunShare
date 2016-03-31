@@ -18,22 +18,22 @@ module.exports = Backbone.View.extend({
         <div class="modal-body">
           <form class="form-inline">
             <div class="form-group">
-              <!-- <label for="presName"></label> -->
-              <input id="presName" type="text" placeholder="Presentation Name" name="name" class="form-control">
+              <input type="text" placeholder="Presentation Name" name="name" autocomplete="off" class="form-control">
             </div>
             <div class="btn-group" data-toggle="buttons">
               <label class="btn btn-default active">
-                <input type="radio" name="options" id="option1" autocomplete="off" checked>
+                <input type="radio" name="folder" value="user" autocomplete="off" checked>
                 User
               </label>
               <label class="btn btn-default">
-                <input type="radio" name="options" id="option2" autocomplete="off">
+                <input type="radio" name="folder" value="global" autocomplete="off">
                 Global
               </label>
             </div>
-            <span class="btn btn-default btn-file">
-              Select File <input type="file">
-            </span>
+            <label class="btn btn-default" for="fileSelector">
+              <input id="fileSelector" type="file" name="file" style="display:none;">
+              <span>Select File</span>
+            </label>
           </form>
           <div class="alert alert-danger" rv-show="errorMsg">
             <strong>Error:</strong> { errorMsg }
@@ -51,13 +51,33 @@ module.exports = Backbone.View.extend({
     'hidden.bs.modal': function(e) {
       this.remove();
     },
-    'click button.upload': function() {
-      this.scope.errorMsg = "Not Yet Implemented =["
-      // var self = this;
-      // PresLoader.upload($(e.currentTarget).data('folder'), function() {
-      //   self.getList();
-      // });
+    'change  #fileSelector': function(e) {
+      // Update button text when a file is selected.
+      $(e.target).next('span').html(e.target.files[0].name);
     },
+    'click button.upload': function() {
+      this.scope.errorMsg = undefined;
+
+      // Validate Name.
+      if (this.$('form [name="name"]').val().length < 1) {
+        return this.scope.errorMsg = "Must enter a name!";
+      }
+
+      // Validate File.
+      if (this.$('form [name="file"]')[0].files.length < 1) {
+        return this.scope.errorMsg = "Must select a file!";
+      }
+
+      // Submit!
+      $.ajax({
+        type: 'POST',
+        url: "/s3_upload",
+        data:  (new FormData(this.$('form')[0])),
+        cache: false,
+        contentType: false,
+        processData: false,
+      });
+    }
   },
   initialize: function() {
     this.scope = {};
