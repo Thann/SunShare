@@ -17628,8 +17628,9 @@
 	      this.scope.capturePing = !this.scope.capturePing;
 	      e.stopPropagation();
 	    },
-	    'click #viewer': function (e) {
+	    'click #viewer img': function (e) {
 	      var viewer = $(e.currentTarget);
+	      console.log("viewer", viewer);
 	      if (this.scope.capturePing && viewer.length > 0) {
 	        // Transmit ping
 	        var offset = viewer.offset();
@@ -17639,6 +17640,9 @@
 	        };
 	        RTCWrapper.syncState();
 	      }
+	    },
+	    'click': function (e) {
+	      // only ping once.
 	      this.scope.capturePing = false;
 	    }
 	  },
@@ -17701,7 +17705,7 @@
 	
 	
 	// module
-	exports.push([module.id, "body {\n  margin: 0;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  background-color: lightgray; }\n\n#header, #footer {\n  position: relative;\n  font-size: 17px;\n  display: flex;\n  flex-flow: row;\n  z-index: 1; }\n  #header > .fa, #footer > .fa {\n    margin: 3px 0px;\n    padding: 8px 10px; }\n  #header > span, #footer > span {\n    margin-top: 7px;\n    margin-right: 15px; }\n  #header > button, #footer > button {\n    outline: none;\n    margin-right: 8px !important; }\n\n#header {\n  border-bottom: 1px solid gray; }\n\n#main-row {\n  flex: 1 100%;\n  display: flex;\n  flex-flow: row; }\n\n#main-panel {\n  flex: 2 0px; }\n\n#left-side-bar,\n#right-side-bar {\n  flex-grow: 0;\n  width: 210px;\n  background-color: gray; }\n\n#right-side-bar.hidden,\n#left-side-bar.hidden {\n  width: 0; }\n\n#waitingMsg {\n  margin: 25px; }\n\n#main-panel.mouse-crosshair #viewer {\n  cursor: crosshair !important; }\n  #main-panel.mouse-crosshair #viewer > * {\n    /* Ignore clicks while pinging. */\n    pointer-events: none; }\n", ""]);
+	exports.push([module.id, "body {\n  margin: 0;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  background-color: lightgray; }\n\n#header, #footer {\n  position: relative;\n  font-size: 17px;\n  display: flex;\n  flex-flow: row;\n  z-index: 1; }\n  #header > .fa, #footer > .fa {\n    margin: 3px 0px;\n    padding: 8px 10px; }\n  #header > span, #footer > span {\n    margin-top: 7px;\n    margin-right: 15px; }\n  #header > button, #footer > button {\n    outline: none;\n    margin-right: 8px !important;\n    /* HACK: override bootstrap focus behavior */ }\n    #header > button:focus, #footer > button:focus {\n      background-color: #fff;\n      border-color: #ccc; }\n    #header > button:hover, #header > button.active, #header > button.active:focus, #footer > button:hover, #footer > button.active, #footer > button.active:focus {\n      background-color: #e6e6e6;\n      border-color: #adadad; }\n\n#header {\n  border-bottom: 1px solid gray; }\n\n#main-row {\n  flex: 1 100%;\n  display: flex;\n  flex-flow: row; }\n\n#main-panel {\n  flex: 2 0px; }\n\n#left-side-bar,\n#right-side-bar {\n  flex-grow: 0;\n  width: 210px;\n  background-color: gray; }\n\n#right-side-bar.hidden,\n#left-side-bar.hidden {\n  width: 0; }\n\n#waitingMsg {\n  margin: 25px; }\n\n#main-panel.mouse-crosshair {\n  cursor: not-allowed !important; }\n  #main-panel.mouse-crosshair #viewer {\n    /* Ignore clicks while pinging. */\n    pointer-events: none; }\n  #main-panel.mouse-crosshair img {\n    pointer-events: auto;\n    cursor: crosshair !important; }\n", ""]);
 	
 	// exports
 
@@ -18111,11 +18115,12 @@
 	  },
 	  renderPing: function (ping_state) {
 	    if (!ping_state) ping_state = { top: 0, left: -100 }; // Render off screen.
-	    var viewer = this.$('#viewer');
+	    var viewer = this.$('#viewer .active img');
+	    var offset = parseInt(viewer.css('marginLeft'), 10); // for when the screen is wider than the image.
 	    var ping = this.$('#ping').removeClass('hidden');
 	    ping.css({
 	      top: ping_state.top * viewer.height() - ping.height() / 2,
-	      left: ping_state.left * viewer.width() - ping.width() / 2
+	      left: ping_state.left * viewer.width() - ping.width() / 2 + offset
 	    });
 	    window.getComputedStyle(ping[0]); // Force opacity render.
 	    ping.addClass('hidden');
@@ -18159,7 +18164,7 @@
 	
 	
 	// module
-	exports.push([module.id, "#viewer #ping {\n  top: 0;\n  color: red;\n  opacity: 1;\n  position: absolute;\n  width: 45px;\n  height: 45px;\n  line-height: 45px;\n  text-align: center;\n  pointer-events: none; }\n  #viewer #ping.hidden {\n    opacity: 0;\n    display: block !important;\n    transition: opacity 5s cubic-bezier(0.6, 0.04, 0.98, 0.335);\n    /* easeOutCirc */\n    animation-name: ping;\n    animation-duration: 1s;\n    animation-direction: alternate;\n    animation-iteration-count: infinite; }\n\n@keyframes ping {\n  from {\n    font-size: 1; }\n  to {\n    font-size: 45px; } }\n", ""]);
+	exports.push([module.id, "#viewer img {\n  margin: auto; }\n\n#viewer #ping {\n  top: 0;\n  color: red;\n  opacity: 1;\n  position: absolute;\n  width: 45px;\n  height: 45px;\n  line-height: 45px;\n  text-align: center;\n  pointer-events: none; }\n  #viewer #ping.hidden {\n    opacity: 0;\n    display: block !important;\n    transition: opacity 5s cubic-bezier(0.6, 0.04, 0.98, 0.335);\n    /* easeOutCirc */\n    animation-name: ping;\n    animation-duration: 1s;\n    animation-direction: alternate;\n    animation-iteration-count: infinite; }\n\n@keyframes ping {\n  from {\n    font-size: 1; }\n  to {\n    font-size: 45px; } }\n", ""]);
 	
 	// exports
 
@@ -24097,7 +24102,7 @@
 	
 	
 	// module
-	exports.push([module.id, ".modal.upload .modal-body {\n  padding-bottom: 0; }\n\n.modal.upload .modal-footer {\n  display: flex;\n  flex-direction: row-reverse; }\n  .modal.upload .modal-footer > * {\n    margin-left: 15px; }\n  .modal.upload .modal-footer .progress {\n    flex: 1;\n    margin: auto 0; }\n\n.modal.upload .disabled {\n  outline: none;\n  /* HACK: why isn't this in bootstrap already? */ }\n  .modal.upload .disabled.btn-default.active {\n    background-color: #e6e6e6;\n    border-color: #adadad; }\n", ""]);
+	exports.push([module.id, ".modal.upload .modal-body {\n  padding-bottom: 0; }\n\n.modal.upload .modal-footer {\n  display: flex;\n  flex-direction: row-reverse; }\n  .modal.upload .modal-footer > * {\n    margin-left: 14px; }\n  .modal.upload .modal-footer .progress {\n    flex: 1;\n    margin: auto 0; }\n\n.modal.upload .disabled {\n  outline: none;\n  /* HACK: why isn't this in bootstrap already? */ }\n  .modal.upload .disabled.btn-default.active {\n    background-color: #e6e6e6;\n    border-color: #adadad; }\n\n.modal.upload #fileSelector {\n  overflow: hidden;\n  max-width: 261px;\n  text-overflow: ellipsis; }\n", ""]);
 	
 	// exports
 

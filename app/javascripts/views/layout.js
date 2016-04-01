@@ -45,8 +45,9 @@ module.exports = Backbone.View.extend({
       this.scope.capturePing = !this.scope.capturePing;
       e.stopPropagation();
     },
-    'click #viewer': function(e) {
+    'click #viewer img': function(e) {
       var viewer = $(e.currentTarget);
+      console.log("viewer", viewer)
       if (this.scope.capturePing && viewer.length > 0) {
         // Transmit ping
         var offset = viewer.offset();
@@ -56,8 +57,10 @@ module.exports = Backbone.View.extend({
         };
         RTCWrapper.syncState();
       }
-      this.scope.capturePing = false;
     },
+    'click':function (e){ // only ping once.
+      this.scope.capturePing = false;
+    }
   },
   initialize: function() {
     Backbone.Subviews.add( this );

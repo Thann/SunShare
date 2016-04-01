@@ -89,11 +89,12 @@ module.exports = Backbone.View.extend({
   },
   renderPing: function(ping_state) {
     if (!ping_state) ping_state = {top: 0, left: -100}; // Render off screen.
-    var viewer = this.$('#viewer');
+    var viewer = this.$('#viewer .active img');
+    var offset = parseInt(viewer.css('marginLeft'), 10); // for when the screen is wider than the image.
     var ping = this.$('#ping').removeClass('hidden');
     ping.css({
       top: (ping_state.top * viewer.height()) - (ping.height() / 2),
-      left:(ping_state.left * viewer.width()) - (ping.width()  / 2)
+      left:(ping_state.left * viewer.width()) - (ping.width()  / 2) + offset
     });
     window.getComputedStyle(ping[0]); // Force opacity render.
     ping.addClass('hidden');

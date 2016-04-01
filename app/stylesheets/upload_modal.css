@@ -9,7 +9,7 @@
     flex-direction: row-reverse;
 
     > * {
-      margin-left: 15px;
+      margin-left: 14px;
     }
 
     .progress {
@@ -26,5 +26,11 @@
       background-color: #e6e6e6;
       border-color: #adadad;
     }
+  }
+
+  #fileSelector {
+    overflow: hidden;
+    max-width: 261px;
+    text-overflow: ellipsis;
   }
 }
