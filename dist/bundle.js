@@ -23781,13 +23781,18 @@
 	      }
 	    }, 100);
 	  },
-	  upload: function (folder, name, callback) {
-	    console.log("UPLOAD", path);
-	    //TODO:
-	  },
+	  // upload: function(folder, name, callback) {
+	  //   console.log("UPLOAD", path)
+	  //   //TODO:
+	  // },
 	  delete: function (path, callback) {
 	    console.log("DELETE", path);
-	    //TODO:
+	    $.ajax({
+	      type: 'DELETE',
+	      url: '/s3_upload',
+	      data: path,
+	      success: callback
+	    });
 	  }
 	};
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
