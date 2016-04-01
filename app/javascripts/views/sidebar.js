@@ -39,10 +39,9 @@ module.exports = Backbone.View.extend({
     },
     'click .fa-refresh': function() {
       this.getList();
-      this.scope.folders = null;
     },
     'click .fa-upload': function() {
-      var m = (new UploadModal()).render();
+      UploadModal.render();
     },
     'click .fa-trash': function(e) {
       var self = this;
@@ -63,9 +62,12 @@ module.exports = Backbone.View.extend({
           self.$('li[data-path="'+newState.presentation+'"]').addClass('selected');
       }
     });
+    UploadModal = new UploadModal();
+    UploadModal.onsuccess = function() { self.getList(); }
   },
   getList: function() {
     var self = this;
+    this.scope.folders = null;
     PresLoader.getList(function(list) {
       self.scope.folders = list;
       self.render();

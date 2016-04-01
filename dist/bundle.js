@@ -23840,10 +23840,9 @@
 	    },
 	    'click .fa-refresh': function () {
 	      this.getList();
-	      this.scope.folders = null;
 	    },
 	    'click .fa-upload': function () {
-	      var m = new UploadModal().render();
+	      UploadModal.render();
 	    },
 	    'click .fa-trash': function (e) {
 	      var self = this;
@@ -23863,9 +23862,14 @@
 	        if (newState.presentation) self.$('li[data-path="' + newState.presentation + '"]').addClass('selected');
 	      }
 	    });
+	    UploadModal = new UploadModal();
+	    UploadModal.onsuccess = function () {
+	      self.getList();
+	    };
 	  },
 	  getList: function () {
 	    var self = this;
+	    this.scope.folders = null;
 	    PresLoader.getList(function (list) {
 	      self.scope.folders = list;
 	      self.render();
@@ -23969,21 +23973,26 @@
 	        </div>
 	
 	        <div class="modal-footer">
-	          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 	          <button type="button" class="btn btn-primary upload">Upload</button>
+	          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	          <div class="progress" rv-show="progress">
+	            <div class="progress-bar progress-bar-striped active" rv-width="progress"></div>
+	          </div>
 	        </div>
 	      </div><!-- /.modal-content -->
 	    </div><!-- /.modal-dialog -->
 	  `,
 	  events: {
-	    'hidden.bs.modal': function (e) {
-	      this.remove();
+	    'click .disabled': function (e) {
+	      e.preventDefault();
+	      e.stopImmediatePropagation();
 	    },
 	    'change  #fileSelector': function (e) {
 	      // Update button text when a file is selected.
 	      $(e.target).next('span').html(e.target.files[0].name);
 	    },
 	    'click button.upload': function () {
+	      var self = this;
 	      this.scope.errorMsg = undefined;
 	
 	      // Validate Name.
@@ -24000,23 +24009,55 @@
 	      $.ajax({
 	        type: 'POST',
 	        url: "/s3_upload",
-	        data: new FormData(this.$('form')[0]),
 	        cache: false,
 	        contentType: false,
-	        processData: false
+	        processData: false,
+	        data: new FormData(this.$('form')[0]),
+	        success: function () {
+	          //TODO: display success msg.
+	          self.$el.modal('hide');
+	          self.onsuccess && self.onsuccess();
+	        },
+	        // Enable progress tracking.
+	        xhr: function () {
+	          var xhr = new window.XMLHttpRequest();
+	          xhr.upload.addEventListener("progress", function (e) {
+	            console.log("UPLOAD", e.loaded / e.total);
+	            self.onprogress(e.loaded / e.total);
+	          }, false);
+	          xhr.addEventListener("progress", function (e) {
+	            console.log("DOWNLOAD", e.loaded / e.total);
+	            self.onprogress(e.loaded / e.total);
+	          }, false);
+	          //TODO: s3_upload progress??
+	          return xhr;
+	        }
 	      });
+	
+	      // Disable elements.
+	      this.$('.btn').addClass('disabled');
+	      this.$('input').prop('disabled', true);
+	
+	      // start progress bar.
+	      self.onprogress(0.001);
 	    }
 	  },
 	  initialize: function () {
 	    this.scope = {};
 	  },
 	  render: function () {
+	    this.onprogress(0);
 	    this.$el.html(this.template);
 	    rivets.bind(this.$el, this.scope);
 	
-	    this.$el.modal();
+	    this.$el.modal('show');
 	    return this;
 	  },
+	  onprogress: function (percent) {
+	    this.scope.progress = percent;
+	    this.$('.progress-bar').css({ width: percent * 100 + '%' });
+	  },
+	  onsuccess: null,
 	  scope: {}
 	});
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
@@ -24056,7 +24097,7 @@
 	
 	
 	// module
-	exports.push([module.id, ".modal.upload .modal-body {\n  padding-bottom: 0; }\n", ""]);
+	exports.push([module.id, ".modal.upload .modal-body {\n  padding-bottom: 0; }\n\n.modal.upload .modal-footer {\n  display: flex;\n  flex-direction: row-reverse; }\n  .modal.upload .modal-footer > * {\n    margin-left: 15px; }\n  .modal.upload .modal-footer .progress {\n    flex: 1;\n    margin: auto 0; }\n\n.modal.upload .disabled {\n  outline: none;\n  /* HACK: why isn't this in bootstrap already? */ }\n  .modal.upload .disabled.btn-default.active {\n    background-color: #e6e6e6;\n    border-color: #adadad; }\n", ""]);
 	
 	// exports
 

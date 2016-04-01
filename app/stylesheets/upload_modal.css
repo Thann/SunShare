@@ -2,6 +2,29 @@
 .modal.upload {
   .modal-body {
     padding-bottom: 0;
+  }
 
+  .modal-footer {
+    display: flex;
+    flex-direction: row-reverse;
+
+    > * {
+      margin-left: 15px;
+    }
+
+    .progress {
+      flex: 1;
+      margin: auto 0;
+    }
+  }
+
+  .disabled {
+    outline: none;
+
+    /* HACK: why isn't this in bootstrap already? */
+    &.btn-default.active {
+      background-color: #e6e6e6;
+      border-color: #adadad;
+    }
   }
 }
