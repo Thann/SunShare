@@ -78,10 +78,19 @@ function serverHandler(request, response) {
 var app;
 
 if (!options.http) {
-  var opts = {
-    key: fs.readFileSync(path.join(__dirname, 'node_modules/rtcmulticonnection-v3/fake-keys/privatekey.pem')),
-    cert: fs.readFileSync(path.join(__dirname, 'node_modules/rtcmulticonnection-v3/fake-keys/certificate.pem'))
-  };
+  try {
+    var opts = {
+      key: fs.readFileSync(path.join(__dirname, 'keys/privatekey.pem')),
+      cert: fs.readFileSync(path.join(__dirname, 'keys/certificate.pem'))
+    };
+  }
+  catch (err) {
+    console.warn("WARNING: failed to find valid SSL keys, falling back to fake-keys..");
+    var opts = {
+      key: fs.readFileSync(path.join(__dirname, 'node_modules/rtcmulticonnection-v3/fake-keys/privatekey.pem')),
+      cert: fs.readFileSync(path.join(__dirname, 'node_modules/rtcmulticonnection-v3/fake-keys/certificate.pem'))
+    };
+  }
   app = server.createServer(opts, serverHandler);
 } else app = server.createServer(serverHandler);
 
