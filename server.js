@@ -91,6 +91,15 @@ if (!options.http) {
       cert: fs.readFileSync(path.join(__dirname, 'node_modules/rtcmulticonnection-v3/fake-keys/certificate.pem'))
     };
   }
+
+  // Setup HTTP-redirect server.
+  require('http').createServer(function(req, res) {
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.end();
+  }).on('error', function(err) {
+    console.warn("WARNING: unable to start http-redirect server. GOT:", err.toString());
+  }).listen(80);
+
   app = server.createServer(opts, serverHandler);
 } else app = server.createServer(serverHandler);
 
