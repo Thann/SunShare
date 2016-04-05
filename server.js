@@ -33,8 +33,15 @@ function serverHandler(request, response) {
   var uri = url.parse(request.url).pathname,
     filename = path.join(process.cwd(), uri);
 
+
   // Parse and handle the route.
-  if (uri == '/') filename = "index.html"
+  if (uri == '/') {
+    filename = "index.html";
+
+    // HTTP Strict Transport Security. (keep using SSL for at least a year)
+    if (!options.http)
+      response.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  }
   else if (uri == '/s3_upload') return s3_upload_handler(request, response);
   else if (uri.indexOf(allowedDir) !== 0) {
     filename = '';
