@@ -74,18 +74,8 @@ module.exports = Backbone.View.extend({
       }
 
       // Submit!
-      $.ajax({
-        type: 'POST',
-        url: "/s3_upload",
-        cache: false,
-        contentType: false,
-        processData: false,
+      PresLoader.upload({
         data:  (new FormData(this.$('form')[0])),
-        success: function() {
-          //TODO: display success msg.
-          self.$el.modal('hide');
-          self.onsuccess && self.onsuccess();
-        },
         // Enable progress tracking.
         xhr: function() {
           var xhr = new window.XMLHttpRequest();
@@ -100,6 +90,10 @@ module.exports = Backbone.View.extend({
           //TODO: s3_upload progress??
           return xhr;
         },
+      }, function() { // After Upload...
+        //TODO: display success msg.
+        self.$el.modal('hide');
+        self.onsuccess && self.onsuccess();
       });
 
       // Disable elements.

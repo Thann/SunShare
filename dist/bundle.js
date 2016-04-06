@@ -23732,7 +23732,7 @@
 /* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {// Handles fetching the list of presentations.
+	/* WEBPACK VAR INJECTION */(function($, _) {// Handles fetching the list of presentations.
 	
 	var AppConfig = __webpack_require__(22);
 	
@@ -23771,31 +23771,44 @@
 	    });
 	  },
 	  getSlides: function (path, callback) {
+	    var self = this;
 	    var tid = setInterval(function () {
 	      // Block return until getList has resolved once.
 	      if (master_list) {
 	        clearInterval(tid);
 	        if (!path) return callback.call(undefined, []);
 	        path = path.split('/');
-	        callback.call(undefined, master_list[path[0]][path[1]]);
+	        // Refresh the list if the presentation is not present.
+	        if (master_list[path[0]][path[1]]) {
+	          callback.call(undefined, master_list[path[0]][path[1]]);
+	        } else {
+	          self.getList(function (ml) {
+	            callback.call(undefined, ml[path[0]][path[1]]);
+	          });
+	        }
 	      }
 	    }, 100);
 	  },
-	  // upload: function(folder, name, callback) {
-	  //   console.log("UPLOAD", path)
-	  //   //TODO:
-	  // },
+	  upload: function (options, callback) {
+	    // console.log("UPLOAD", path);
+	    $.ajax(_.extend({
+	      type: 'POST',
+	      url: "/s3_upload",
+	      cache: false,
+	      contentType: false,
+	      processData: false
+	    }, options)).then(callback);
+	  },
 	  delete: function (path, callback) {
 	    console.log("DELETE", path);
 	    $.ajax({
 	      type: 'DELETE',
 	      url: '/s3_upload',
-	      data: path,
-	      success: callback
-	    });
+	      data: path
+	    }).then(callback);
 	  }
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(3)))
 
 /***/ },
 /* 22 */
@@ -24016,18 +24029,8 @@
 	      }
 	
 	      // Submit!
-	      $.ajax({
-	        type: 'POST',
-	        url: "/s3_upload",
-	        cache: false,
-	        contentType: false,
-	        processData: false,
+	      PresLoader.upload({
 	        data: new FormData(this.$('form')[0]),
-	        success: function () {
-	          //TODO: display success msg.
-	          self.$el.modal('hide');
-	          self.onsuccess && self.onsuccess();
-	        },
 	        // Enable progress tracking.
 	        xhr: function () {
 	          var xhr = new window.XMLHttpRequest();
@@ -24042,6 +24045,11 @@
 	          //TODO: s3_upload progress??
 	          return xhr;
 	        }
+	      }, function () {
+	        // After Upload...
+	        //TODO: display success msg.
+	        self.$el.modal('hide');
+	        self.onsuccess && self.onsuccess();
 	      });
 	
 	      // Disable elements.
