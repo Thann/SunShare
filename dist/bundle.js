@@ -44,7 +44,9 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {__webpack_require__(2);
+	/* WEBPACK VAR INJECTION */(function($) {'use strict';
+	
+	__webpack_require__(2);
 	__webpack_require__(5);
 	__webpack_require__(6);
 	
@@ -15893,7 +15895,8 @@
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(_) {
+	/* WEBPACK VAR INJECTION */(function(_) {'use strict';
+	
 	var rivets = __webpack_require__(7);
 	
 	// === Binders ===
@@ -17581,7 +17584,8 @@
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {
+	/* WEBPACK VAR INJECTION */(function($) {'use strict';
+	
 	__webpack_require__(11);
 	
 	var rivets = __webpack_require__(7);
@@ -17595,40 +17599,20 @@
 	
 	module.exports = Backbone.View.extend({
 	  el: 'body',
-	  template: `
-	    <div id="header" rv-show="user.isAdmin">
-	      <div id="sidebarToggle" class="fa fa-bars"></div>
-	      <span>SunShare</span>
-	      <span>{ rtc.state.presentation }</span>
-	      <button id="stop" class="btn btn-default fa fa-stop" rv-show="rtc.state.presentation"></button>
-	      <button id="ping" class="btn btn-default fa fa-crosshairs" rv-class-active="capturePing" rv-show="rtc.state.presentation"></button>
-	    </div>
-	    <div id="main-row">
-	      <div id="left-side-bar" rv-show="user.isAdmin" rv-class-hidden="rtc.state.presentation">
-	        <div data-subview="sidebar"></div>
-	      </div>
-	      <div id="main-panel" rv-class-mouse-crosshair="capturePing">
-	        <div id="waitingMsg" rv-hide="rtc.state.presentation">
-	          Waiting for presentation to start..
-	        </div>
-	        <div data-subview="viewer"></div>
-	      </div>
-	    </div>
-	    <!-- <div id="footer"></div> -->
-	  `,
+	  template: '\n    <div id="header" rv-show="user.isAdmin">\n      <div id="sidebarToggle" class="fa fa-bars"></div>\n      <span>SunShare</span>\n      <span>{ rtc.state.presentation }</span>\n      <button id="stop" class="btn btn-default fa fa-stop" rv-show="rtc.state.presentation"></button>\n      <button id="ping" class="btn btn-default fa fa-crosshairs" rv-class-active="capturePing" rv-show="rtc.state.presentation"></button>\n    </div>\n    <div id="main-row">\n      <div id="left-side-bar" rv-show="user.isAdmin" rv-class-hidden="rtc.state.presentation">\n        <div data-subview="sidebar"></div>\n      </div>\n      <div id="main-panel" rv-class-mouse-crosshair="capturePing">\n        <div id="waitingMsg" rv-hide="rtc.state.presentation">\n          Waiting for presentation to start..\n        </div>\n        <div data-subview="viewer"></div>\n      </div>\n    </div>\n    <!-- <div id="footer"></div> -->\n  ',
 	  events: {
-	    'click #sidebarToggle': function () {
+	    'click #sidebarToggle': function clickSidebarToggle() {
 	      this.$('#left-side-bar').toggleClass('hidden');
 	    },
-	    'click #stop': function (e) {
+	    'click #stop': function clickStop(e) {
 	      RTCWrapper.state.presentation = null;
 	      RTCWrapper.syncState();
 	    },
-	    'click #ping': function (e) {
+	    'click #ping': function clickPing(e) {
 	      this.scope.capturePing = !this.scope.capturePing;
 	      e.stopPropagation();
 	    },
-	    'click #viewer img': function (e) {
+	    'click #viewer img': function clickViewerImg(e) {
 	      var viewer = $(e.currentTarget);
 	      console.log("viewer", viewer);
 	      if (this.scope.capturePing && viewer.length > 0) {
@@ -17641,12 +17625,12 @@
 	        RTCWrapper.syncState();
 	      }
 	    },
-	    'click': function (e) {
+	    'click': function click(e) {
 	      // only ping once.
 	      this.scope.capturePing = false;
 	    }
 	  },
-	  initialize: function () {
+	  initialize: function initialize() {
 	    Backbone.Subviews.add(this);
 	    this.scope.user = UserService;
 	    this.scope.rtc = RTCWrapper;
@@ -17654,14 +17638,14 @@
 	    RTCWrapper.joinRoom('sunrun_foo_change_me_later');
 	  },
 	  subviewCreators: {
-	    viewer: function () {
+	    viewer: function viewer() {
 	      return new Viewer();
 	    },
-	    sidebar: function () {
+	    sidebar: function sidebar() {
 	      return new Sidebar();
 	    }
 	  },
-	  render: function () {
+	  render: function render() {
 	    this.$el.html(this.template);
 	    rivets.bind(this.$el, this.scope);
 	    return this;
@@ -18024,7 +18008,9 @@
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {// A glorified wrapper for bootstrap carousel.
+	/* WEBPACK VAR INJECTION */(function($) {'use strict';
+	
+	// A glorified wrapper for bootstrap carousel.
 	
 	__webpack_require__(16);
 	
@@ -18034,34 +18020,9 @@
 	var UserService = __webpack_require__(20);
 	
 	module.exports = Backbone.View.extend({
-	  template: `
-	    <div id="viewer" class="carousel slide" rv-show="slides | length | gt 0">
-	      <!-- Indicators -->
-	      <ol class="carousel-indicators" rv-show="user.isAdmin">
-	        <li rv-each-item="slides" rv-data-slide-to="index" data-target="#viewer"></li>
-	      </ol>
-	
-	      <!-- Wrapper for slides -->
-	      <div class="carousel-inner" role="listbox">
-	        <div rv-each-url="slides" class="item">
-	          <img rv-src="url" alt="...">
-	        </div>
-	      </div>
-	
-	      <!-- Controls -->
-	      <a class="left carousel-control" rv-show="user.isAdmin" href="#viewer" role="button" data-slide="prev">
-	        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-	        <span class="sr-only">Previous</span>
-	      </a>
-	      <a class="right carousel-control" rv-show="user.isAdmin" href="#viewer" role="button" data-slide="next">
-	        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-	        <span class="sr-only">Next</span>
-	      </a>
-	      <div id="ping" class="fa fa-circle-thin hidden"></div>
-	    </div>
-	  `,
+	  template: '\n    <div id="viewer" class="carousel slide" rv-show="slides | length | gt 0">\n      <!-- Indicators -->\n      <ol class="carousel-indicators" rv-show="user.isAdmin">\n        <li rv-each-item="slides" rv-data-slide-to="index" data-target="#viewer"></li>\n      </ol>\n\n      <!-- Wrapper for slides -->\n      <div class="carousel-inner" role="listbox">\n        <div rv-each-url="slides" class="item">\n          <img rv-src="url" alt="...">\n        </div>\n      </div>\n\n      <!-- Controls -->\n      <a class="left carousel-control" rv-show="user.isAdmin" href="#viewer" role="button" data-slide="prev">\n        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>\n        <span class="sr-only">Previous</span>\n      </a>\n      <a class="right carousel-control" rv-show="user.isAdmin" href="#viewer" role="button" data-slide="next">\n        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>\n        <span class="sr-only">Next</span>\n      </a>\n      <div id="ping" class="fa fa-circle-thin hidden"></div>\n    </div>\n  ',
 	  events: {
-	    'click .carousel-control': function (e) {
+	    'click .carousel-control': function clickCarouselControl(e) {
 	      if (!this.scope.user.isAdmin) return;
 	      var self = this;
 	      var dir = this.$(e.currentTarget).data('slide');
@@ -18072,14 +18033,14 @@
 	        self.renderPing(false);
 	      });
 	    },
-	    'click .carousel-indicators > li': function (e) {
+	    'click .carousel-indicators > li': function clickCarouselIndicatorsLi(e) {
 	      if (!this.scope.user.isAdmin) return;
 	      RTCWrapper.state.slide = $(e.currentTarget).data('slide-to');
 	      RTCWrapper.syncState();
 	      self.renderPing(false);
 	    }
 	  },
-	  initialize: function () {
+	  initialize: function initialize() {
 	    var self = this;
 	    RTCWrapper.onStateChange(function (prevState, state) {
 	      if (prevState.presentation != state.presentation) {
@@ -18096,7 +18057,7 @@
 	        }
 	    });
 	  },
-	  render: function () {
+	  render: function render() {
 	    this.scope.state = RTCWrapper.state;
 	    this.scope.user = UserService;
 	
@@ -18113,7 +18074,7 @@
 	
 	    return this;
 	  },
-	  renderPing: function (ping_state) {
+	  renderPing: function renderPing(ping_state) {
 	    if (!ping_state) ping_state = { top: 0, left: -100 }; // Render off screen.
 	    var viewer = this.$('#viewer .active img');
 	    var offset = parseInt(viewer.css('marginLeft'), 10); // for when the screen is wider than the image.
@@ -18173,7 +18134,8 @@
 /* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(_) {
+	/* WEBPACK VAR INJECTION */(function(_) {'use strict';
+	
 	__webpack_require__(19);
 	
 	var UserService = __webpack_require__(20);
@@ -18182,7 +18144,7 @@
 	//TODO: prevent admin-spoofing..
 	
 	module.exports = {
-	  joinRoom: function (room) {
+	  joinRoom: function joinRoom(room) {
 	    var self = this;
 	    this.connection = new RTCMultiConnection();
 	    this.connection.session = { data: true };
@@ -18205,18 +18167,18 @@
 	
 	    this.connection.openOrJoin(room);
 	  },
-	  leaveRoom: function () {
+	  leaveRoom: function leaveRoom() {
 	    if (this.connection) {
 	      this.connection.leave();
 	    }
 	  },
 	  state: {},
-	  onStateChange: function (fn) {
+	  onStateChange: function onStateChange(fn) {
 	    // Register a handler
 	    if (typeof fn !== 'function') throw "Must pass a function!";
 	    stateChangeHandlers.push(fn);
 	  },
-	  syncState: function (triggerLocally) {
+	  syncState: function syncState(triggerLocally) {
 	    // defaults to true
 	    this.connection.send({ type: 'SyncState', data: this.state });
 	    if (triggerLocally !== false) triggerStateChange();
@@ -18228,7 +18190,7 @@
 	var stateChangeHandlers = [];
 	
 	var self = module.exports;
-	var triggerStateChange = function () {
+	var triggerStateChange = function triggerStateChange() {
 	  // Trigger handlers
 	  var originalState = _.clone(self.state);
 	  _.forEach(stateChangeHandlers, function (fn) {
@@ -23712,11 +23674,12 @@
 /* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {
+	/* WEBPACK VAR INJECTION */(function($) {'use strict';
+	
 	// This is just a stub to be replaced by a SalesForce login.
 	
 	module.exports = {
-	  init: function () {
+	  init: function init() {
 	    var self = this;
 	    $(window).on('hashchange', function () {
 	      self.isAdmin = window.location.hash == '#admin';
@@ -23732,7 +23695,9 @@
 /* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($, _) {// Handles fetching the list of presentations.
+	/* WEBPACK VAR INJECTION */(function($, _) {'use strict';
+	
+	// Handles fetching the list of presentations.
 	
 	var AppConfig = __webpack_require__(22);
 	
@@ -23752,7 +23717,7 @@
 	var url = window.location.protocol + '//s3.amazonaws.com/' + AppConfig["s3_bucket"];
 	
 	module.exports = {
-	  getList: function (callback) {
+	  getList: function getList(callback) {
 	    $.ajax(url).success(function (data) {
 	      // build listing.
 	      var listing = {};
@@ -23770,7 +23735,7 @@
 	      callback.call(null, listing);
 	    });
 	  },
-	  getSlides: function (path, callback) {
+	  getSlides: function getSlides(path, callback) {
 	    var self = this;
 	    var tid = setInterval(function () {
 	      // Block return until getList has resolved once.
@@ -23789,7 +23754,7 @@
 	      }
 	    }, 100);
 	  },
-	  upload: function (options, callback) {
+	  upload: function upload(options, callback) {
 	    // console.log("UPLOAD", path);
 	    $.ajax(_.extend({
 	      type: 'POST',
@@ -23799,7 +23764,7 @@
 	      processData: false
 	    }, options)).then(callback);
 	  },
-	  delete: function (path, callback) {
+	  delete: function _delete(path, callback) {
 	    console.log("DELETE", path);
 	    $.ajax({
 	      type: 'DELETE',
@@ -23822,7 +23787,8 @@
 /* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {
+	/* WEBPACK VAR INJECTION */(function($) {'use strict';
+	
 	__webpack_require__(24);
 	
 	var rivets = __webpack_require__(7);
@@ -23833,41 +23799,20 @@
 	var PresLoader = __webpack_require__(21);
 	
 	module.exports = Backbone.View.extend({
-	  template: `
-	    <div id="sidebarHeader">
-	      Presentations:
-	      <div class="pull-right">
-	        <span class="fa fa-refresh"></span>
-	        <span class="fa fa-upload"></span>
-	      </div>
-	    </div>
-	    <ul id="folders">
-	      <li rv-each-folder="folders | to_a">
-	        <span>{ folder.key }</span>
-	        <ul id="presentations">
-	          <li rv-each-item="folder.value | to_a" rv-data-path="folder.key |+ '/' |+ item.key">
-	            { item.key }
-	            <span>({ item.value | length })</span>
-	            <span class="fa fa-trash pull-right"><span>
-	          </li>
-	        </ul>
-	      </li>
-	    </ul>
-	    <div id="sidebarLoading" rv-hide="folders">Loading ....</div>
-	  `,
+	  template: '\n    <div id="sidebarHeader">\n      Presentations:\n      <div class="pull-right">\n        <span class="fa fa-refresh"></span>\n        <span class="fa fa-upload"></span>\n      </div>\n    </div>\n    <ul id="folders">\n      <li rv-each-folder="folders | to_a">\n        <span>{ folder.key }</span>\n        <ul id="presentations">\n          <li rv-each-item="folder.value | to_a" rv-data-path="folder.key |+ \'/\' |+ item.key">\n            { item.key }\n            <span>({ item.value | length })</span>\n            <span class="fa fa-trash pull-right"><span>\n          </li>\n        </ul>\n      </li>\n    </ul>\n    <div id="sidebarLoading" rv-hide="folders">Loading ....</div>\n  ',
 	  events: {
-	    'click #presentations > li': function (e) {
+	    'click #presentations > li': function clickPresentationsLi(e) {
 	      RTCWrapper.state.presentation = $(e.currentTarget).data('path');
 	      RTCWrapper.state.slide = 0;
 	      RTCWrapper.syncState();
 	    },
-	    'click .fa-refresh': function () {
+	    'click .fa-refresh': function clickFaRefresh() {
 	      this.getList();
 	    },
-	    'click .fa-upload': function () {
+	    'click .fa-upload': function clickFaUpload() {
 	      UploadModal.render();
 	    },
-	    'click .fa-trash': function (e) {
+	    'click .fa-trash': function clickFaTrash(e) {
 	      var self = this;
 	      e.stopImmediatePropagation();
 	      PresLoader.delete($(e.currentTarget).parent().data('path'), function () {
@@ -23875,7 +23820,7 @@
 	      });
 	    }
 	  },
-	  initialize: function () {
+	  initialize: function initialize() {
 	    this.getList();
 	    var self = this;
 	    RTCWrapper.onStateChange(function (old, newState) {
@@ -23890,7 +23835,7 @@
 	      self.getList();
 	    };
 	  },
-	  getList: function () {
+	  getList: function getList() {
 	    var self = this;
 	    this.scope.folders = null;
 	    PresLoader.getList(function (list) {
@@ -23898,7 +23843,7 @@
 	      self.render();
 	    });
 	  },
-	  render: function () {
+	  render: function render() {
 	    this.$el.html(this.template);
 	    rivets.bind(this.$el, this.scope);
 	
@@ -23953,7 +23898,8 @@
 /* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {
+	/* WEBPACK VAR INJECTION */(function($) {'use strict';
+	
 	__webpack_require__(27);
 	
 	var rivets = __webpack_require__(7);
@@ -23962,59 +23908,17 @@
 	
 	module.exports = Backbone.View.extend({
 	  className: 'modal fade upload',
-	  template: `
-	    <div class="modal-dialog">
-	      <div class="modal-content">
-	        <div class="modal-header">
-	          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	          <h4 class="modal-title">Upload Presentation</h4>
-	        </div>
-	
-	        <div class="modal-body">
-	          <form class="form-inline">
-	            <div class="form-group">
-	              <input type="text" placeholder="Presentation Name" name="name" autocomplete="off" class="form-control">
-	            </div>
-	            <div class="btn-group" data-toggle="buttons">
-	              <label class="btn btn-default active">
-	                <input type="radio" name="folder" value="user" autocomplete="off" checked>
-	                User
-	              </label>
-	              <label class="btn btn-default">
-	                <input type="radio" name="folder" value="global" autocomplete="off">
-	                Global
-	              </label>
-	            </div>
-	            <label class="btn btn-default" for="fileSelector">
-	              <input id="fileSelector" type="file" name="file" style="display:none;">
-	              <span>Select File</span>
-	            </label>
-	          </form>
-	          <div class="alert alert-danger" rv-show="errorMsg">
-	            <strong>Error:</strong> { errorMsg }
-	          </div>
-	        </div>
-	
-	        <div class="modal-footer">
-	          <button type="button" class="btn btn-primary upload">Upload</button>
-	          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-	          <div class="progress" rv-show="progress">
-	            <div class="progress-bar progress-bar-striped active" rv-width="progress"></div>
-	          </div>
-	        </div>
-	      </div><!-- /.modal-content -->
-	    </div><!-- /.modal-dialog -->
-	  `,
+	  template: '\n    <div class="modal-dialog">\n      <div class="modal-content">\n        <div class="modal-header">\n          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n          <h4 class="modal-title">Upload Presentation</h4>\n        </div>\n\n        <div class="modal-body">\n          <form class="form-inline">\n            <div class="form-group">\n              <input type="text" placeholder="Presentation Name" name="name" autocomplete="off" class="form-control">\n            </div>\n            <div class="btn-group" data-toggle="buttons">\n              <label class="btn btn-default active">\n                <input type="radio" name="folder" value="user" autocomplete="off" checked>\n                User\n              </label>\n              <label class="btn btn-default">\n                <input type="radio" name="folder" value="global" autocomplete="off">\n                Global\n              </label>\n            </div>\n            <label class="btn btn-default" for="fileSelector">\n              <input id="fileSelector" type="file" name="file" style="display:none;">\n              <span>Select File</span>\n            </label>\n          </form>\n          <div class="alert alert-danger" rv-show="errorMsg">\n            <strong>Error:</strong> { errorMsg }\n          </div>\n        </div>\n\n        <div class="modal-footer">\n          <button type="button" class="btn btn-primary upload">Upload</button>\n          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>\n          <div class="progress" rv-show="progress">\n            <div class="progress-bar progress-bar-striped active" rv-width="progress"></div>\n          </div>\n        </div>\n      </div><!-- /.modal-content -->\n    </div><!-- /.modal-dialog -->\n  ',
 	  events: {
-	    'click .disabled': function (e) {
+	    'click .disabled': function clickDisabled(e) {
 	      e.preventDefault();
 	      e.stopImmediatePropagation();
 	    },
-	    'change  #fileSelector': function (e) {
+	    'change  #fileSelector': function changeFileSelector(e) {
 	      // Update button text when a file is selected.
 	      $(e.target).next('span').html(e.target.files[0].name);
 	    },
-	    'click button.upload': function () {
+	    'click button.upload': function clickButtonUpload() {
 	      var self = this;
 	      this.scope.errorMsg = undefined;
 	
@@ -24032,7 +23936,7 @@
 	      PresLoader.upload({
 	        data: new FormData(this.$('form')[0]),
 	        // Enable progress tracking.
-	        xhr: function () {
+	        xhr: function xhr() {
 	          var xhr = new window.XMLHttpRequest();
 	          xhr.upload.addEventListener("progress", function (e) {
 	            console.log("UPLOAD", e.loaded / e.total);
@@ -24060,10 +23964,10 @@
 	      self.onprogress(0.001);
 	    }
 	  },
-	  initialize: function () {
+	  initialize: function initialize() {
 	    this.scope = {};
 	  },
-	  render: function () {
+	  render: function render() {
 	    this.onprogress(0);
 	    this.$el.html(this.template);
 	    rivets.bind(this.$el, this.scope);
@@ -24071,7 +23975,7 @@
 	    this.$el.modal('show');
 	    return this;
 	  },
-	  onprogress: function (percent) {
+	  onprogress: function onprogress(percent) {
 	    this.scope.progress = percent;
 	    this.$('.progress-bar').css({ width: percent * 100 + '%' });
 	  },

@@ -29,8 +29,13 @@ module.exports = {
   module: {
     loaders: [
       { test:  /\.s?css$/, loaders: ["style", "css", "sass"] },
-      { test:  /\.js$/, loader: "babel", exclude: /node_modules/ }, // Adds ES6 support.
       { test:  /\.json$/, loaders: ["json", "strip-json-comments"] },
+      { // ES6 support.
+        test:  /\.js$/,
+        loader: "babel",
+        exclude: /node_modules/,
+        query: { presets: ['es2015'] }
+      },
     ]
   },
   devtool: 'source-map',
