@@ -15,7 +15,7 @@ var AppConfig = require('app/config');
 // }
 
 var master_list;
-var url = window.location.protocol +'//s3.amazonaws.com/'+ AppConfig["s3_bucket"];
+var url = 'https://s3.amazonaws.com/'+ AppConfig["s3_bucket"];
 
 module.exports = {
   getList: function(callback) {
